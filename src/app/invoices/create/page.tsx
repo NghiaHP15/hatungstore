@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Category, Invoice, InvoiceItem, Product, ProductUnit } from "@/app/types";
+import { Category, Customer, Invoice, InvoiceItem, Product, ProductUnit } from "@/app/types";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { useDebounce } from "@/hooks/useDebounce";
 import { no_image } from "@/images";
-import { categoriesAPI, invoicesAPI, productsAPI } from "@/lib/api";
+import { categoriesAPI, customersAPI, invoicesAPI, productsAPI } from "@/lib/api";
 import { formatCurrency } from "@/lib/utils";
 import { CloseOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Col, Image, Input, InputNumber, List, message, Row, Select, Space, Table, Typography } from "antd";
+import { Button, Col, Image, Input, InputNumber, List, message, Popover, Row, Select, Space, Table, Typography } from "antd";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
@@ -33,7 +33,10 @@ const CreateInvoice = () => {
     const deboundedProduct = useDebounce(searchProduct, 500);
     const [listOrder, setListOrder] = useState<InvoiceItem[]>([]);
     const [messageApi, contextHolder] = message.useMessage();
-    const [loading, setLoading] = useState(false);
+    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const debouncedCustomerName = useDebounce(invoice.customer_name || "", 500);
+    const [showCustomer, setShowCustomer] = useState<boolean>(false);
 
     const fetchProducts = async () => {
         try {
@@ -59,6 +62,22 @@ const CreateInvoice = () => {
             console.error(error);
         } 
     }
+
+    const fetCustomer = async () => {
+        try {
+            const res = await customersAPI.getCustomers({ search: debouncedCustomerName });
+            if (res.data.customers) {
+                setCustomers(res.data.customers);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        fetCustomer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedCustomerName]);
 
     useEffect(() => {
         fetchCategorys();
@@ -370,19 +389,41 @@ const CreateInvoice = () => {
                 <div className="col-span-3">
                     <div className="flex flex-col gap-2 border border-gray-200 rounded-md h-full">
                         <div className="flex flex-col gap-2 p-4 ">
-                            <span className="text-base font-roboto">Thống tin hóa đơn</span>
+                            <span className="text-base font-roboto">Thông tin hóa đơn</span>
                         </div>
                         <div className="p-4">
                             <Row className="gap-2">
                                 <Col span={24} className="flex! flex-col gap-1">
                                     <span className="font-roboto">Tên khách hàng:</span>
-                                    <Input 
-                                        size="large"
-                                        placeholder="Nhập tên khách hàng"
-                                        value={invoice?.customer_name}
-                                        onChange={(e) => setInvoice({...invoice, customer_name: e.target.value})}
-                                        
-                                    />
+                                    <Popover 
+                                        trigger="click"
+                                        placement="bottom"
+                                        open={showCustomer}
+                                        onOpenChange={(visible) => setShowCustomer(visible)}
+                                        arrow={false}
+                                        content={
+                                            <div className="flex flex-col gap-2 w-[200px] max-h-[400px] overflow-auto">
+                                                {customers.map((item) => (
+                                                    <span 
+                                                        key={item.id} 
+                                                        onClick={() => {
+                                                            setInvoice({...invoice, customer_name: item.name})
+                                                            setShowCustomer(false)
+                                                        }} 
+                                                        className="cursor-pointer px-2 py-1 rounded-sm hover:bg-gray-100 font-roboto"
+                                                    >{item.name}</span>
+                                                ))}
+                                            </div>
+                                        }
+                                    >
+                                        <Input 
+                                            size="large"
+                                            placeholder="Nhập tên khách hàng"
+                                            value={invoice?.customer_name}
+                                            onChange={(e) => setInvoice({...invoice, customer_name: e.target.value})}
+                                            
+                                        />
+                                    </Popover>
                                 </Col>
                                 <Col span={24} className="flex! flex-col gap-1">
                                     <span className="font-roboto">Số điện thoại:</span>

@@ -5,7 +5,7 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import React, { useEffect, useRef, useState } from "react";
 import { Invoice } from "../types";
 import { Button, DatePicker, Flex, Input, Select, Space, Table, Tag, Typography } from "antd";
-import { DeleteOutlined, LeftOutlined, PlusOutlined, PrinterOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, LeftOutlined, PlusOutlined, PrinterOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
 import { invoicesAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -62,7 +62,7 @@ const CategoryPage = () => {
             key: 'code',
             title: "Mã đơn hàng",
             dataIndex: 'code',
-            width: 150,
+            width: 100,
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{record.invoice_code}</span>
         },
         {
@@ -83,7 +83,7 @@ const CategoryPage = () => {
             key: 'total_amount',
             dataIndex: 'total_amount',
             title: "Tống tiền",
-            width: 150,
+            width: 100,
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{formatCurrency(record.total_amount || 0)}</span>
         },
         {
@@ -97,7 +97,7 @@ const CategoryPage = () => {
             key: 'created_at',
             dataIndex: 'created_at',
             title: "Ngày tạo",
-            width: 150,
+            width: 100,
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{dayjs(record.created_at).format('DD/MM/YYYY')}</span>
         },
         {
@@ -109,6 +109,9 @@ const CategoryPage = () => {
             render: (_: any, record: Invoice) => (
             <Space key={record.id}>
                 <Button icon={<PrinterOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onView(record)} />
+                <Button icon={<EditOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => {
+                    router.push(`/invoices/update/${record.id}`);
+                }} />
                 <Button icon={<DeleteOutlined className="text-red-500!"/>} className="border-red-500!" onClick={() => onDelete(record)} />
             </Space>
             ),

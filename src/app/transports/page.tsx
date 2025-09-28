@@ -5,7 +5,7 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import React, { useEffect, useRef, useState } from "react";
 import { InvoiceItem, Shipping, ShippingItem } from "../types";
 import { Button, DatePicker, Flex, Input, Select, Space, Table, Tag, Typography } from "antd";
-import { DeleteOutlined, EditOutlined, EyeOutlined, LeftOutlined, PlusOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, LeftOutlined, PlusOutlined, PrinterOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
 import { shippingAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -130,7 +130,7 @@ const TransportPage = () => {
             fixed: 'right',
             render: (_: any, record: Shipping) => (
             <Space key={record.id}>
-                <Button icon={<EyeOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onView(record)} />
+                <Button icon={<PrinterOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onView(record)} />
                 <Button icon={<EditOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onEdit(record)} />
                 <Button icon={<DeleteOutlined className="text-red-500!"/>} className="border-red-500!" onClick={() => onDelete(record)} />
             </Space>

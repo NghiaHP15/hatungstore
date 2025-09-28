@@ -90,7 +90,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       children: [
         {
           key: '/products/units',
-          label: <Link href="/products/units" className='text-base font-roboto'>Mặt hàng</Link>,
+          label: <Link href="/products/units" className='text-base font-roboto'>Tất cả mặt hàng</Link>,
         },
         {
           key: '/products/list',

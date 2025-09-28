@@ -253,7 +253,6 @@ const UserDetailForm = forwardRef(
       performValidate([field as PropKey], _param);
     }
     
-    
     return (
       <Form layout="vertical">
         <Row gutter={24}>
