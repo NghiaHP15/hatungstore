@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Category, Invoice, Shipping, ShippingItem } from "@/app/types";
+import { Invoice, Shipping, ShippingItem } from "@/app/types";
 import { MODE } from "@/app/types/enum";
 import _ from "lodash";
 import { invoicesAPI, shippingAPI } from "@/lib/api";
 import { Button, Input, List, message, Modal, Space } from "antd";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
-import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
+import { CloseOutlined, SearchOutlined, SwapOutlined } from "@ant-design/icons";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatCurrency } from "@/lib/utils";
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
@@ -25,20 +25,20 @@ const ShippingDetail = forwardRef(({ reload }: Props, ref) => {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const refMode = useRef<{ data?: Category; mode: string }>({
+    const refMode = useRef<{ data?: Shipping; mode: string }>({
         data: undefined,
         mode: MODE.CREATE,
     });
 
     useImperativeHandle(ref, () => ({
-        create: (_data: Category) => {
+        create: (_data: Shipping) => {
         refMode.current = {
             data: _data,
             mode: MODE.CREATE,
         };
         setIsOpen(true);
         },
-        update: (_data: Category) => {
+        update: (_data: Shipping) => {
         refMode.current = {
             data: _data,
             mode: MODE.UPDATE,
@@ -82,7 +82,7 @@ const ShippingDetail = forwardRef(({ reload }: Props, ref) => {
             styles={{
             body: { flexGrow: 1 },
             content: { display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}}
-            width="800px"
+            width="1200px"
             centered
             footer={[
                 <Space key={"actions"} className="pr-3">
@@ -133,8 +133,9 @@ const emptyParameter: Shipping = {
 const emptyItem: ShippingItem = {
     id: uuid(),
     invoice_id: "",
-    priority: 0,
-    invoice: null
+    invoice: null,
+    prioritized: false,
+
 };
 
 const ShippingDetailForm = forwardRef(
@@ -204,8 +205,6 @@ const ShippingDetailForm = forwardRef(
         });
         return;
       }
-      const _items = _payload.items.map((item: ShippingItem, index: number) => ({...item, priority: index}))
-      _payload.items = _items;
       _payload.status = true;
       setLoading(true);
       try {
@@ -245,9 +244,33 @@ const ShippingDetailForm = forwardRef(
       setParam({ ...param, items: newItems });
   };
 
-    const addShipping = (invoice: Invoice) => {
+    const addShippingBefore = (invoice: Invoice) => {
         const _param: Shipping = _.cloneDeep(param);
-        _param.items?.push({ ...emptyItem, id: uuid(), invoice_id: invoice.id, invoice: invoice });
+        _param.items?.push({ ...emptyItem, id: uuid(), invoice_id: invoice.id, invoice: invoice, prioritized: true });
+        setParam(_param);
+    }
+
+    const addShippingAfter = (invoice: Invoice) => {
+        const _param: Shipping = _.cloneDeep(param);
+        _param.items?.push({ ...emptyItem, id: uuid(), invoice_id: invoice.id, invoice: invoice, prioritized: false });
+        setParam(_param);
+    }
+
+    const resetBefore = () => {
+        const _param: Shipping = _.cloneDeep(param);
+        _param.items = _param.items?.filter((item) => !item.prioritized);
+        setParam(_param);
+    }
+
+    const resetAfter = () => {
+        const _param: Shipping = _.cloneDeep(param);
+        _param.items = _param.items?.filter((item) => item.prioritized);
+        setParam(_param);
+    }
+
+    const transfer = (record: ShippingItem) => {
+        const _param: Shipping = _.cloneDeep(param);
+        _param.items = _param.items?.map((item) => (item.id === record.id ? { ...item, prioritized: !item.prioritized }: item));
         setParam(_param);
     }
 
@@ -259,8 +282,8 @@ const ShippingDetailForm = forwardRef(
   
     return (
       <div>
-        <div className="grid grid-cols-2 gap-5">
-            <div className="col-span-2"></div>
+        <div className="grid grid-cols-3 gap-5">
+            <div className="col-span-3"></div>
             <div className="border-r border-gray-200 pr-4">
               <div>
                 <div className="px-2 mb-4">
@@ -273,21 +296,32 @@ const ShippingDetailForm = forwardRef(
                   dataSource={invoices.filter((item) => param?.items?.findIndex((i) => i.invoice_id === item.id) === -1)}
                   renderItem={(item) => {
                     return(
-                      <div 
-                        onClick={() => addShipping(item)}
-                        className="py-1"
-                      >
-                        <div className="p-2 last:mb-0 border border-gray-200 rounded-sm px-2 flex gap-2 items-center justify-between cursor-pointer hover:bg-red-50 hover:border-red-300 transition-all duration-100">
-                        <div className="flex items-center gap-2">
-                          <div className="flex flex-col font-roboto">
-                            <span className="text-base ">{item.invoice_code}</span>
-                            <span className="text-gray-500">{item.customer?.name}  x  Số lượng: {item.items?.reduce((total, item) => total + item.quantity, 0)}</span>
-                            <span className="text-gray-500 line-clamp-1">{item.customer?.address}</span>
+                      <div className="py-1">
+                        <div className="relative p-2 last:mb-0 border border-gray-200 rounded-sm px-2 flex gap-2 items-center justify-between cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <div className="flex flex-col font-roboto">
+                              <span className="text-base">{!item.customer?.name ? "Khách hàng" : item.customer?.name}</span>
+                              <span className="text-gray-500 line-clamp-1">{!item.customer?.address ? "Địa chỉ" : item.customer?.address}</span>
+                              <span className="text-gray-500">{item.invoice_code} </span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col items-end font-roboto">
-                          <span className="text-base font-medium text-red-400">{formatCurrency(item.total_amount || 0)}</span>
-                        </div>
+                          <div className="flex flex-col items-end font-roboto">
+                            <span className="text-base font-medium text-red-400">{formatCurrency(item.total_amount || 0)}</span>
+                          </div>
+                          <div className="absolute top-0 right-0 w-full rounded-sm h-full flex items-center">
+                            <div 
+                              onClick={() => addShippingBefore(item)} 
+                              className="group flex items-center justify-center h-full w-1/2 hover:bg-blue-200/70 hover:border hover:border-blue-300"
+                              >
+                              <span className="group-hover:text-blue-600 text-xl font-roboto text-transparent">Đầu</span>
+                            </div>
+                            <div 
+                              onClick={() => addShippingAfter(item)}
+                              className="group flex items-center justify-center h-full w-1/2 hover:bg-red-200/70 hover:border hover:border-red-300"
+                            >
+                              <span className="group-hover:text-red-600 text-xl font-roboto text-transparent">Đuôi</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )
@@ -295,10 +329,10 @@ const ShippingDetailForm = forwardRef(
                 />
               </div>
             </div>
-            <div>
+            <div className="border-r border-gray-200 pr-4">
               <div className="px-2 mb-4 flex items-center justify-between">
-                <h2 className="text-base font-roboto">Danh sách đơn chuyển:</h2>
-                <Button type="link" className="underline" onClick={() => resetData()}>Đặt lại</Button>
+                <h2 className="text-base font-roboto">Danh sách đầu xe:</h2>
+                <Button type="link" className="underline" onClick={() => resetBefore()}>Đặt lại</Button>
               </div>
               {param?.items && param?.items.length > 0 ? (
                 <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -309,7 +343,7 @@ const ShippingDetailForm = forwardRef(
                         ref={provided.innerRef}
                         className="h-[750px] px-2! overflow-auto"
                       >
-                        {param.items && param.items.map((item, index) => (
+                        {param.items && param.items.filter((item) => item.prioritized === true).map((item, index) => (
                           <Draggable key={item.id} draggableId={item.id || ''} index={index}>
                             {(provided) => (
                               <li
@@ -318,17 +352,18 @@ const ShippingDetailForm = forwardRef(
                                 {...provided.dragHandleProps}
                               >
                                 <div className="py-1">
-                                <div className="group p-2 bg-white border border-gray-200 rounded-sm px-2 flex gap-2 items-center justify-between cursor-pointer hover:bg-red-50 hover:border-red-300 transition-all duration-100">
+                                <div className="group p-2 bg-white border border-gray-200 rounded-sm px-2 flex gap-2 items-center justify-between hover:bg-red-50 hover:border-red-300 transition-all duration-100">
                                   <div className="flex items-center gap-2">
                                     <div className="flex flex-col font-roboto">
-                                      <span className="text-base ">{item.invoice?.invoice_code}</span>
-                                      <span className="text-gray-500">{item.invoice?.customer?.name}  x  Số lượng: {item.invoice?.items?.reduce((total, item) => total + item.quantity, 0)}</span>
-                                      <span className="text-gray-500 line-clamp-1">{item.invoice?.customer?.address}</span>
+                                      <span className="text-base ">{!item.invoice?.customer ? 'Khách hàng' : item.invoice?.customer?.name} </span>
+                                      <span className="text-gray-500 line-clamp-1">{!item.invoice?.customer?.address ? 'Địa chỉ' : item.invoice?.customer?.address}</span>
+                                      <span className="text-gray-500">{item.invoice?.invoice_code}</span>
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-3 font-roboto">
                                     <span className="text-base font-medium text-red-400">{formatCurrency(item.invoice?.total_amount || 0)}</span>
-                                    <CloseOutlined className="text-red-400! cursor-pointer group-hover:w-6 w-0 transition-all duration-200" onClick={() => handleRemoveItem(item)}/>
+                                    <SwapOutlined className="text-blue-400! cursor-pointer group-hover:w-5 w-0 h-5 transition-all duration-200" onClick={() => transfer(item)} />
+                                    <CloseOutlined className="text-red-400! cursor-pointer group-hover:w-5 w-0 h-5 transition-all duration-200" onClick={() => handleRemoveItem(item)}/>
                                   </div>
                                 </div>
                                 </div>
@@ -345,7 +380,58 @@ const ShippingDetailForm = forwardRef(
                 <></>
               )}
             </div>
-            <div className="col-span-2 px-2">
+            <div>
+              <div className="px-2 mb-4 flex items-center justify-between">
+                <h2 className="text-base font-roboto">Danh sách đuôi xe:</h2>
+                <Button type="link" className="underline" onClick={() => resetAfter()}>Đặt lại</Button>
+              </div>
+              {param?.items && param?.items.length > 0 ? (
+                <DragDropContext onDragEnd={handleOnDragEnd}>
+                  <Droppable droppableId="list">
+                    {(provided) => (
+                      <ul
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className="h-[750px] px-2! overflow-auto"
+                      >
+                        {param.items && param.items.filter((item) => item.prioritized === false).map((item, index) => (
+                          <Draggable key={item.id} draggableId={item.id || ''} index={index}>
+                            {(provided) => (
+                              <li
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                <div className="py-1">
+                                <div className="group p-2 bg-white border border-gray-200 rounded-sm px-2 flex gap-2 items-center justify-between hover:bg-red-50 hover:border-red-300 transition-all duration-100">
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex flex-col font-roboto">
+                                      <span className="text-base ">{!item.invoice?.customer?.name ? 'Khách hàng' : item.invoice?.customer?.name}</span>
+                                      <span className="text-gray-500 line-clamp-1">{!item.invoice?.customer?.address? "Địa chỉ" : item.invoice?.customer?.address}</span>
+                                      <span className="text-gray-500">{item.invoice?.invoice_code}</span>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-3 font-roboto">
+                                    <span className="text-base font-medium text-red-400">{formatCurrency(item.invoice?.total_amount || 0)}</span>
+                                    <SwapOutlined className="text-blue-400! cursor-pointer group-hover:w-5 w-0 h-5 transition-all duration-200" onClick={() => transfer(item)} />
+                                    <CloseOutlined className="text-red-400! cursor-pointer group-hover:w-5 w-0 h-5 transition-all duration-200" onClick={() => handleRemoveItem(item)}/>
+                                  </div>
+                                </div>
+                                </div>
+                              </li>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </ul>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+              ): (
+                <></>
+              )}
+            </div>
+            <div className="col-span-3 px-2">
               <Input.TextArea value={param?.note} placeholder="Ghi chú" onChange={(e) => setParam({ ...param, note: e.target.value })} className="w-full rounded-sm! mb-4!"/>
             </div>
         </div>

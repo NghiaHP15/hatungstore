@@ -12,6 +12,7 @@ import PageSizeOption from "@/components/PageSizeOption";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatCurrency } from "@/lib/utils";
 import ProductUnitDetail from "@/components/model/UnitProductModel";
+import ProductDetail from "@/components/model/ProductModel";
 
 const ProductPage = () => {
     const [loading, setLoading] = useState(false);
@@ -25,7 +26,8 @@ const ProductPage = () => {
     const [data, setData] = useState<UnitProduct[]>([]);
     const debouncedValue = useDebounce(lazyParams.search, 500);
     const [categories, setCategories] = useState<Category[]>([]);
-    const refDetail = useRef<any>(null);
+    const refUnitProduct = useRef<any>(null);
+    const refProduct = useRef<any>(null);
 
     const fetchProducts = async () => {
         try{
@@ -135,12 +137,16 @@ const ProductPage = () => {
         fetchProducts();
     };
 
-    const onCreate = () => {
-      refDetail.current.create();
+    const onCreateProductUnit = () => {
+        refUnitProduct.current.create();
     };
 
+    const onCreateProduct = () => {
+        refProduct.current.create();
+    }
+
     const onEdit = (formValue: ProductUnit) => {
-        refDetail.current.update({ ...formValue })
+        refUnitProduct.current.update({ ...formValue })
     };
 
     const onDelete = async (id: string) => {
@@ -186,12 +192,20 @@ const ProductPage = () => {
                 <Flex justify="space-between" className="mb-3! p-3! rounded-md bg-gray-50">
                 <Space >
                     <Button 
-                    type="primary" 
-                    className="font-roboto"
-                    onClick={onCreate} 
-                    icon={<PlusOutlined className="text-white"/>}
+                        type="primary" 
+                        className="font-roboto"
+                        onClick={onCreateProductUnit} 
+                        icon={<PlusOutlined className="text-white"/>}
                     >
-                    Thêm đơn vị
+                    Thêm mặt hàng
+                    </Button>
+                    <Button 
+                        type="primary" 
+                        className="font-roboto"
+                        onClick={onCreateProduct} 
+                        icon={<PlusOutlined className="text-white"/>}
+                    >
+                    Thêm nhóm mặt hàng
                     </Button>
                 </Space>
                 <Space>
@@ -246,7 +260,11 @@ const ProductPage = () => {
                 />
             </Flex>
             <ProductUnitDetail
-                ref={refDetail} 
+                ref={refUnitProduct} 
+                reload={reload}
+            />
+            <ProductDetail
+                ref={refProduct} 
                 reload={reload}
             />
         </DashboardLayout>

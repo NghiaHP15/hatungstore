@@ -97,8 +97,8 @@ export interface ShippingItem {
   id?: string
   shipping_id?: string
   invoice_id?: string
-  priority?: number
-  invoice: Invoice | null
+  invoice: Invoice | null,
+  prioritized?: boolean
 }
 
 export interface UserPermissions {

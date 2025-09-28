@@ -57,7 +57,7 @@ export async function PUT(
     const shippingItems = items.map((item: any) => ({
       shipping_id: shippingId,
       invoice_id: item.invoice_id,
-      priority: item.priority,
+      prioritized: item.prioritized,
     }));
 
     const { error: insertError } = await supabase

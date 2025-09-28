@@ -10,7 +10,6 @@ import { Category } from "../types";
 import { useDebounce } from "@/hooks/useDebounce";
 import { categoriesAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
-import { useAuth } from "@/hooks/useAuth";
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -68,7 +67,6 @@ const CategoryPage = () => {
   const debouncedValue = useDebounce(lazyParams.search, 500);
   const [loadingAction, setLoadingAction] = useState(false);
   const [form] = Form.useForm();
-  const { user } = useAuth();
 
   const isEditing = (record: Category) => record.id === editingKey;
 
@@ -284,7 +282,6 @@ const CategoryPage = () => {
             <Button
               type="primary"
               onClick={onCreate}
-              disabled={!(user?.role === 'admin' || user?.role === 'manager')}
               icon={<PlusOutlined className="text-white" />}
             >
               Thêm danh mục

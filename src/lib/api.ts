@@ -95,6 +95,7 @@ export const shippingAPI = {
   createShipping: (data: any) => api.post('/shippings', data),
   updateShipping: (id: string, data: any) => api.put(`/shippings/${id}`, data),
   deleteShipping: (id: string) => api.delete(`/shippings/${id}`),
+  getPrioritizedShippings: (params: any) => api.get('/shippings/prioritized', { params }),
 };
 
 export const customersAPI = {

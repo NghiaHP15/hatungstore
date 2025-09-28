@@ -87,14 +87,14 @@ export async function POST(request: NextRequest) {
     const total = subtotal - discount_amount;
 
     let customer_id: string | null = null;
-    const checkCustomer = customer_name !== "" || customer_phone !== "";
+    const checkCustomer = customer_name !== "";
 
     if (checkCustomer) {
       // Check if customer exists (ưu tiên theo số điện thoại)
       const { data: existingCustomer, error: findError } = await supabase
         .from("customers")
         .select("*")
-        .or(`phone.eq.${customer_phone},name.eq.${customer_name}`)
+        .or(`name.eq.${customer_name}`)
         .maybeSingle();
 
       if (findError) {

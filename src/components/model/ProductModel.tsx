@@ -5,12 +5,13 @@ import { Category, Product, ProductUnit } from "@/app/types";
 import { MODE } from "@/app/types/enum";
 import _ from "lodash";
 import { categoriesAPI, productsAPI, uploadAPI } from "@/lib/api";
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Space, Table } from "antd";
+import { Button, Col, Form, Input, InputNumber, Modal, Popover, Row, Select, Space, Table } from "antd";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { UploadImage } from "../upload/upload-image";
 import { publicId } from "../upload/utils";
 import { v4 as uuid } from "uuid";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { useDebounce } from "@/hooks/useDebounce";
 
 type Props = {
     reload: () => void
@@ -165,10 +166,20 @@ const ProductDetailForm = forwardRef(
 
     const [param, setParam] = useState<Product>(emptyParameter);
 
+    const [category, setCategory] = useState<string>("");
+
+    const [show, setShow] = useState<boolean>(false);
+
+    const [load, setLoad] = useState<boolean>(false);
+
+    const [searchCategory, setSearchCategory] = useState<string>('');
+
+    const deboundedCategory = useDebounce(searchCategory, 500);
+
     useEffect(()=>{
         const fetchCategory = async () => {
             try {
-                const response = await categoriesAPI.getCategories();
+                const response = await categoriesAPI.getCategories({ search: deboundedCategory });
                 if (!response.data.categories) return;
                 setCategories(response.data.categories);
             } catch (error) {
@@ -176,7 +187,7 @@ const ProductDetailForm = forwardRef(
             }
         }
         fetchCategory();
-    },[])
+    },[param.category_id, deboundedCategory]);
 
     const update = async (data: Product) => {
       const _param: Product = _.cloneDeep(data);
@@ -297,6 +308,26 @@ const ProductDetailForm = forwardRef(
         setParam(_param);
     }
 
+    const addCategory = async () => {
+        try {
+            setLoad(true);
+            const res = await categoriesAPI.createCategory({ name: category });
+            console.log(res);
+            
+            if (res.data) {
+                const _param: Product = _.cloneDeep(param);
+                _param.category_id = res.data.id;
+                setParam(_param);
+                setCategory("");
+                setShow(false);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoad(false);
+        }
+    }
+
     return (
       <Form layout="vertical">
         <Row gutter={24}>
@@ -321,14 +352,33 @@ const ProductDetailForm = forwardRef(
               validateStatus={errors['category_id'] ? 'error' : ''}
               help={errors['category_id']}
             >
-              <Select
+              <div className="flex items-center gap-2">
+                <Select
                 value={param.category_id}
                 showSearch
+                filterOption={false}
+                onSearch={(e) => setSearchCategory(e)}
                 fieldNames={{ label: 'name', value: 'id' }}
                 options={categories || []}
                 placeholder="Danh mục"
                 onChange={(value) => onChange(value, "category_id")}
               />
+              <Popover
+                trigger={"click"}
+                title="Thêm danh mục"
+                placement="bottomRight"
+                open={show}
+                onOpenChange={setShow}
+                content={
+                  <div className="flex items-center gap-2">
+                    <Input placeholder="Tên danh mục" className="w-[250px]!" value={category} onChange={(e) => setCategory(e.target.value)} />
+                    <Button loading={load} type="primary" disabled={!category} onClick={addCategory}>Thêm</Button>
+                  </div>
+                }
+              >
+                <Button icon={<PlusOutlined />} type="primary" />
+              </Popover>
+              </div>
             </Form.Item>
           </Col>
           <Col span={24}>
@@ -344,25 +394,26 @@ const ProductDetailForm = forwardRef(
                     </>
                 ): (
                     <Table
+                        key="id"
                         columns={[
                           {
                             title: 'Tên sản phẩm',
                             dataIndex: 'name',
                             render: (text: string, record: ProductUnit, index: number) =>
-                              <Input value={record.name} onChange={(e) => onChangeUnit(e.target.value, 'name', index)} className="w-full" />
+                              <Input size="large" value={record.name} onChange={(e) => onChangeUnit(e.target.value, 'name', index)} className="w-full" />
                           },
                           {
                             title: 'Đơn vị tính',
                             dataIndex: 'unit_name',
                             render: (text: string, record: ProductUnit, index: number) =>
-                              <Input value={record.unit_name} onChange={(e) => onChangeUnit(e.target.value, 'unit_name', index)} className="w-full" />
+                              <Input size="large" value={record.unit_name} onChange={(e) => onChangeUnit(e.target.value, 'unit_name', index)} className="w-full!" />
                           },
                           {
                             title: 'Giá',
                             width: 150,
                             dataIndex: 'price',
                             render: (text: string, record: ProductUnit, index: number) => 
-                              <InputNumber suffix="đ" value={record.price} controls={false} onChange={(value) => onChangeUnit(value, 'price', index)} className="w-full!" />
+                              <InputNumber step={1000} min={0} size="large" suffix="đ" value={record.price} onChange={(value) => onChangeUnit(value, 'price', index)} className="w-full!" />
                           },
                           {
                             title: <Button icon={<PlusOutlined className="text-blue-500!" />} type="dashed" size="small" onClick={() => onAddUnit()} />,

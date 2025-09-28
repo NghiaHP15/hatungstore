@@ -37,6 +37,8 @@ body {
   display: none !important;
 }
 
+.ant-input-number-input,
+.ant-popover-title,
 .ant-statistic-title,
 .ant-picker ,
 .ant-select-selection-item,
@@ -71,20 +73,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1a1;   /* Khi hover */
-}
-
-@media print {
-  * {
-    color: #000 !important;
-    background-color: #fff !important;
-    border-color: #000 !important;
-  }
-}
-
-.print-mode .ant-btn-primary {
-  background-color: #3b82f6 !important; /* blue-500 */
-  color: #fff !important;
-}
-.print-mode .ant-btn-dangerous {
-  background-color: #ef4444 !important; /* red-500 */
 }

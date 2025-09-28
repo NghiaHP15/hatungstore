@@ -8,7 +8,7 @@ import { no_image } from "@/images";
 import { categoriesAPI, invoicesAPI, productsAPI } from "@/lib/api";
 import { formatCurrency } from "@/lib/utils";
 import { CloseOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Col, Image, Input, InputNumber, List, message, notification, Row, Select, Space, Table, Typography } from "antd";
+import { Button, Col, Image, Input, InputNumber, List, message, Row, Select, Space, Table, Typography } from "antd";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
@@ -140,6 +140,13 @@ const CreateInvoice = () => {
     const handleCreateInvoice = async () => {
         const _params = _.cloneDeep(invoice);
         _params.items = listOrder;
+        if (_params.customer_name === "") {
+            messageApi.open({
+                type: 'error',
+                content: 'Vui lòng thêm tên khách hàng',
+            });
+            return;
+        }
         
         if (_params.items.length === 0) {
             messageApi.open({
@@ -209,11 +216,12 @@ const CreateInvoice = () => {
                             <span className="text-base font-roboto">Danh sách sản phẩm</span>
                             <div className="flex items-center gap-2">
                                 <span className="w-25 text-base font-roboto">Sản phẩm: </span>
-                                <Input placeholder="Nhập tìm kiếm..." value={searchProduct} onChange={(e) => setSearchProduct(e.target.value)} />
+                                <Input size="large" placeholder="Nhập tìm kiếm..." value={searchProduct} onChange={(e) => setSearchProduct(e.target.value)} />
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="w-25 text-base font-roboto">Danh mục: </span>
                                 <Select
+                                    size="large"
                                     className="font-roboto"
                                     style={{ width: '100%' }}
                                     placeholder="Chọn danh mục"
@@ -227,7 +235,7 @@ const CreateInvoice = () => {
                             rowKey="id"
                             size="small"
                             className="relative none-header"
-                            scroll={{ y: 'calc(100vh - 390px)' }}
+                            scroll={{ y: 'calc(100vh - 420px)' }}
                             loading={loadingProduct}
                             pagination={{
                                 responsive: true,
@@ -327,28 +335,30 @@ const CreateInvoice = () => {
                                                 </div>
                                                 <div className="flex justify-end gap-2 w-full">
                                                     <InputNumber
+                                                        size="large"
                                                         min={0}
-                                                        value={item.quantity} 
-                                                        controls={false}
-                                                        className="font-roboto"
+                                                        value={item.quantity}
+                                                        className="w-[100px]! font-roboto"
                                                         suffix={item.product_unit?.unit_name}
                                                         onChange={(e) => onChangeQuantity(item, e)}
                                                     />
                                                     <InputNumber
+                                                        size="large"
                                                         min={0}
-                                                        controls={false}
+                                                        step={1000}
                                                         suffix="đ"
                                                         value={item.unit_price} 
-                                                        className="w-full" 
+                                                        className="w-[120px]! font-roboto" 
                                                         onChange={(e) => onChangeUnitPrice(item, e)}
                                                     />
                                                 </div>
                                             </div>
                                             <Button 
                                                 type="link" 
+                                                size="large"
                                                 icon={<CloseOutlined />}
                                                 onClick={() => handleRemoveProduct(item)}
-                                                className="group-hover:w-[24px]! w-[0px]! overflow-hidden" 
+                                                className="group-hover:w-[35px]! w-[0px]! overflow-hidden" 
                                             />
                                         </div>
                                     </List.Item>
@@ -367,6 +377,7 @@ const CreateInvoice = () => {
                                 <Col span={24} className="flex! flex-col gap-1">
                                     <span className="font-roboto">Tên khách hàng:</span>
                                     <Input 
+                                        size="large"
                                         placeholder="Nhập tên khách hàng"
                                         value={invoice?.customer_name}
                                         onChange={(e) => setInvoice({...invoice, customer_name: e.target.value})}
@@ -375,7 +386,8 @@ const CreateInvoice = () => {
                                 </Col>
                                 <Col span={24} className="flex! flex-col gap-1">
                                     <span className="font-roboto">Số điện thoại:</span>
-                                    <Input 
+                                    <Input
+                                        size="large"
                                         placeholder="Nhập số điện thoại"
                                         value={invoice?.customer_phone}
                                         onChange={(e) => setInvoice({...invoice, customer_phone: e.target.value})}
@@ -384,6 +396,7 @@ const CreateInvoice = () => {
                                 <Col span={24} className="flex! flex-col gap-1">
                                     <span className="font-roboto">Địa chỉ:</span>
                                     <Input 
+                                        size="large"
                                         placeholder="Nhập địa chỉ" 
                                         value={invoice?.customer_address}
                                         onChange={(e) => setInvoice({...invoice, customer_address: e.target.value})}
@@ -392,9 +405,10 @@ const CreateInvoice = () => {
                                 <Col span={24} className="flex! items-center justify-between mt-4 ">
                                     <span className="font-roboto">Giảm giá: </span>
                                     <InputNumber
+                                        size="large"
                                         min={0}
+                                        step={1000}
                                         value={invoice?.discount_amount}
-                                        controls={false}
                                         suffix="đ"
                                         onChange={(e) => setInvoice({...invoice, discount_amount: e || 0})}
                                     />

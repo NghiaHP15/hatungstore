@@ -190,7 +190,7 @@ const InvoiceDetailForm = forwardRef(
     const handlePrint = useReactToPrint({
         contentRef:  invoiceRef, 
         pageStyle: `
-        @page { size: A4 portrait; margin: 20mm; }
+        @page { size: A4 portrait; margin: 10mm; }
         @media print {
             body { -webkit-print-color-adjust: exact; }
         }
@@ -206,63 +206,66 @@ const InvoiceDetailForm = forwardRef(
         </>) : 
         (
             <div id="invoice-section" ref={invoiceRef}>
-              <div className='grid grid-cols-5 gap-4 font-roboto'>
-                  <div className="col-span-5 flex">
-                      <h1 className="text-2xl font-bold font-roboto">{store.store}</h1>
-                  </div>
-                  <div className='col-span-2'>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Đại chỉ:</span>
-                          <span>{store.address}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Số điện thoại:</span>
-                          <span>{store.phone}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Ngân hàng:</span>
-                          <span>{store.name_bank}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Tên:</span>
-                          <span>{store.owner}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Số tài khoản:</span>
-                          <span>{store.account_bank}</span>
-                      </div>
-                  </div>
-                  <div className="col-span-1 flex items-center justify-center">
-                      <Image
-                      width={100}
-                      height={100}
-                        src={ store.qr_code || qr_pay.src}
-                      alt="logo"
-                      preview={false}
-                      />
-                  </div>
-                  <div className="col-span-2">
-                      <div className='flex gap-3 justify-between'>
-                          <span>Mã đơn hàng:</span>
-                          <span>{param.invoice_code}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Ngày tạo đơn:</span>
-                          <span>{dayjs(param.created_at).tz("Asia/Ho_Chi_Minh").format("DD/MM/YYYY")}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Tên khách hàng:</span>
-                          <span>{param.customer?.name}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Số điện thoại:</span>
-                          <span>{param.customer?.phone}</span>
-                      </div>
-                      <div className='flex gap-3 justify-between'>
-                          <span>Địa chỉ:</span>
-                          <span>{param.customer?.address}</span>
-                      </div>
-                  </div>
+                <div className='grid grid-cols-5 font-roboto'>
+                    <div className="col-span-2 border-b border-gray-300">
+                        <h1 className="text-5xl uppercase font-medium">{store.store}</h1>
+                        <div className='font-base'>
+                            <span>Địa chỉ: </span>
+                            <span>{store.address}</span>
+                        </div>
+                        <div className='font-base font-medium'>
+                            <span>SĐT: </span>
+                            <span>{store.phone}</span>
+                        </div>
+                    </div>
+                    <div className="col-span-1 border-b border-gray-300">
+                        <Image
+                        width={100}
+                        height={100}
+                            src={ store.qr_code || qr_pay.src}
+                        alt="logo"
+                        preview={false}
+                        />
+                    </div>
+                    <div className="col-span-2 border-b border-gray-300">
+                        <h2 className="text-xl uppercase">Hóa đơn bán hàng</h2>
+                        <div className=''>
+                            <span>Ngân hàng: </span>
+                            <span className="font-medium">{store.name_bank}</span>
+                        </div>
+                        <div className=''>
+                            <span>Tên: </span>
+                            <span className="font-medium">{store.owner}</span>
+                        </div>
+                        <div className=''>
+                            <span>Số tài khoản: </span>
+                            <span className="font-medium">{store.account_bank}</span>
+                        </div>
+                    </div>
+                    <div className="col-span-3 mt-2">
+                        <div className=''>
+                            <span>Tên khách hàng: </span>
+                            <span>{param.customer?.name}</span>
+                        </div>
+                        <div className=''>
+                            <span>Số điện thoại: </span>
+                            <span>{param.customer?.phone}</span>
+                        </div>
+                        <div className=''>
+                            <span>Địa chỉ: </span>
+                            <span>{param.customer?.address}</span>
+                        </div>
+                    </div>
+                    <div className="col-span-2 mt-2">
+                        <div className=''>
+                            <span>Mã đơn hàng: </span>
+                            <span>{param.invoice_code}</span>
+                        </div>
+                        <div className=''>
+                            <span>Ngày tạo đơn: </span>
+                            <span>{dayjs(param.created_at).tz("Asia/Ho_Chi_Minh").format("DD/MM/YYYY")}</span>
+                        </div>
+                    </div>
               </div>
               <div>
                   <div className='mt-4'>

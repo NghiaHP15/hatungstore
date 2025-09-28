@@ -2,12 +2,11 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Card, Row, Col, Statistic, Table, Tag, Typography } from 'antd';
+import { Card, Row, Col, Statistic, Table, Tag } from 'antd';
 import {
   ShoppingCartOutlined,
-  DollarOutlined,
-  UserOutlined,
-  WarningOutlined,
+  TruckOutlined,
+  SnippetsOutlined,
 } from '@ant-design/icons';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import { formatCurrency } from '@/lib/utils';
@@ -15,18 +14,16 @@ import { invoicesAPI, reportAPI } from '@/lib/api';
 import { Invoice } from '../types';
 
 interface DashboardStats {
-  totalSales: number;
-  totalProducts: number;
-  totalCustomers: number;
-  lowStockCount: number;
+  invoiceDelivered: number;
+  invoicePending: number;
+  totalInvoices: number;
 }
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
-    totalSales: 0,
-    totalProducts: 0,
-    totalCustomers: 0,
-    lowStockCount: 0,
+    invoiceDelivered: 0,
+    invoicePending: 0,
+    totalInvoices: 0,
   });
 
   const [recentSales, setRecentSales] = useState([]);
@@ -53,10 +50,9 @@ export default function DashboardPage() {
       const res = await reportAPI.getGeneral();
       if(res.data){
         setStats({
-          totalSales: res.data.totalRevenue,
-          totalProducts: res.data.totalProducts,
-          totalCustomers: res.data.totalCustomers,
-          lowStockCount: res.data.totalOrders,
+          invoiceDelivered: res.data.invoiceDelivered,
+          invoicePending: res.data.invoicePending,
+          totalInvoices: res.data.totalInvoices
         });
       }
     } catch (error) {
@@ -111,44 +107,34 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Stats Cards */}
         <Row gutter={16}>
-          <Col xs={24} sm={12} lg={6}>
+          <Col xs={24} lg={8}>
             <Card>
               <Statistic
-                title="Doanh thu"
-                value={stats.totalSales}
+                title={<span className='text-lg text-gray-700!'>Đơn đã giao</span>}
+                value={stats.invoiceDelivered}
                 formatter={(value) => formatCurrency(value as number)}
-                prefix={<DollarOutlined />}
+                prefix={<TruckOutlined />}
                 valueStyle={{ color: '#3f8600' }}
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12} lg={6}>
+          <Col xs={24} lg={8}>
             <Card>
               <Statistic
-                title="Sản phẩm"
-                value={stats.totalProducts}
+                title={<span className='text-lg text-gray-700!'>Đơn chưa giao</span>}
+                value={stats.invoicePending}
                 prefix={<ShoppingCartOutlined />}
                 valueStyle={{ color: '#1890ff' }}
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12} lg={6}>
+          <Col xs={24} lg={8}>
             <Card>
               <Statistic
-                title="Khách hàng"
-                value={stats.totalCustomers}
-                prefix={<UserOutlined />}
+                title={<span className='text-lg text-gray-700!'>Tổng đơn hàng</span>}
+                value={stats.totalInvoices}
+                prefix={<SnippetsOutlined />}
                 valueStyle={{ color: '#722ed1' }}
-              />
-            </Card>
-          </Col>
-          <Col xs={24} sm={12} lg={6}>
-            <Card>
-              <Statistic
-                title="Đơn hàng"
-                value={stats.lowStockCount}
-                prefix={<WarningOutlined />}
-                valueStyle={{ color: '#cf1322' }}
               />
             </Card>
           </Col>

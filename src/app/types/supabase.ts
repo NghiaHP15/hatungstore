@@ -269,21 +269,21 @@ export type Database = {
           created_at: string
           id: string
           invoice_id: string | null
-          priority: number | null
+          prioritized: boolean | null
           shipping_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           invoice_id?: string | null
-          priority?: number | null
+          prioritized?: boolean | null
           shipping_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           invoice_id?: string | null
-          priority?: number | null
+          prioritized?: boolean | null
           shipping_id?: string | null
         }
         Relationships: [

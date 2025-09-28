@@ -5,13 +5,14 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import React, { useEffect, useRef, useState } from "react";
 import { InvoiceItem, Shipping, ShippingItem } from "../types";
 import { Button, DatePicker, Flex, Input, Select, Space, Table, Tag, Typography } from "antd";
-import { DeleteOutlined, EyeOutlined, LeftOutlined, PlusOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, LeftOutlined, PlusOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
 import { shippingAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatCurrency } from "@/lib/utils";
 import ShippingDetail from "@/components/model/ShippingModel";
 import dayjs from "dayjs";
+import ShippingViewDetail from "@/components/model/ShippingViewModel";
 
 const TransportPage = () => {
     const [loading, setLoading] = useState(false);
@@ -27,6 +28,7 @@ const TransportPage = () => {
     const [data, setData] = useState<Shipping[]>([]);
     const debouncedValue = useDebounce(lazyParams.search, 500);
     const refDetail = useRef<any>(null);
+    const refViewDetail = useRef<any>(null);
 
     const fetchShipping = async () => {
         try{
@@ -128,7 +130,8 @@ const TransportPage = () => {
             fixed: 'right',
             render: (_: any, record: Shipping) => (
             <Space key={record.id}>
-                <Button icon={<EyeOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onEdit(record)} />
+                <Button icon={<EyeOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onView(record)} />
+                <Button icon={<EditOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onEdit(record)} />
                 <Button icon={<DeleteOutlined className="text-red-500!"/>} className="border-red-500!" onClick={() => onDelete(record)} />
             </Space>
             ),
@@ -145,6 +148,10 @@ const TransportPage = () => {
 
      const onEdit = (formValue: Shipping) => {
         refDetail.current.update(formValue);
+    };
+
+    const onView = (formValue: Shipping) => {
+        refViewDetail.current.view(formValue);
     };
 
     const onDelete = async (formValue: Shipping) => {
@@ -193,7 +200,7 @@ const TransportPage = () => {
                         onClick={onCreate} 
                         icon={<PlusOutlined className="text-white"/>}
                     >
-                    Thêm đơn hàng
+                    Tạo sổ tổng hợp
                     </Button>
                 </Space>
                 <Space>
@@ -296,6 +303,7 @@ const TransportPage = () => {
                 />
             </Flex>
             <ShippingDetail ref={refDetail} reload={reload} />
+            <ShippingViewDetail ref={refViewDetail} reload={reload} />
         </DashboardLayout>
     );
 };

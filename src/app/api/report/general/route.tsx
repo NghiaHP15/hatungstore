@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createServerSupabase } from '@/lib/superbaseServer';
 import { NextResponse } from 'next/server';
 
@@ -7,46 +8,22 @@ export async function GET() {
 
     // Lấy ngày đầu tháng và cuối tháng hiện tại
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    const startOfDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-    // Tổng doanh thu theo orders
-    const { data: totalRevenueData, error: revenueError } = await supabase
+    // Tổng đơn hàng theo ngày
+    const { data: totalInvoices, error: revenueError } = await supabase
       .from("invoices")
-      .select("total_amount, id", { count: "exact" })
-      .gte("created_at", startOfMonth.toISOString())
-      .lte("created_at", endOfMonth.toISOString());
+      .select("id, status", { count: "exact" })
+      .gte("created_at", startOfDate.toISOString())
+      .lte("created_at", endOfDate.toISOString());
 
     if (revenueError) throw revenueError;
 
-    const totalRevenue = totalRevenueData?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0;
-
-    // Tổng sản phẩm bán ra trong tháng
-    const { data: totalProductsData, error: productsError } = await supabase
-      .from("invoice_items")
-      .select("quantity")
-      .in(
-        "invoice_id",
-        totalRevenueData?.map((invoice) => invoice.id) || []
-      );
-
-    if (productsError) throw productsError;
-
-    const totalProducts = totalProductsData?.reduce((sum, item) => sum + Number(item.quantity), 0) || 0;
-
-    // Tổng khách hàng
-    const { count: totalCustomers } = await supabase
-      .from("customers")
-      .select("*", { count: "exact", head: true });
-
-    // Tổng đơn hàng
-    const totalOrders = totalRevenueData?.length || 0;
-
     return NextResponse.json({
-      totalRevenue,
-      totalProducts,
-      totalCustomers,
-      totalOrders,
+      totalInvoices: totalInvoices.length,
+      invoiceDelivered: totalInvoices.filter((invoice: any) => invoice.status === true).length,
+      invoicePending: totalInvoices.filter((invoice: any) => invoice.status === false).length
     });
   } catch (error) {
     console.error(error);

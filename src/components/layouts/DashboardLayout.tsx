@@ -13,6 +13,7 @@ import {
   Popover,
   List,
   Image,
+  Button,
 } from 'antd';
 import {
   DashboardOutlined,
@@ -26,6 +27,7 @@ import {
   SearchOutlined,
   TruckOutlined,
   TeamOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -88,11 +90,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       children: [
         {
           key: '/products/units',
-          label: <Link href="/products/units" className='text-base font-roboto'>Danh sách</Link>,
+          label: <Link href="/products/units" className='text-base font-roboto'>Mặt hàng</Link>,
         },
         {
           key: '/products/list',
-          label: <Link href="/products/list" className='text-base font-roboto'>Nhóm sản phẩm</Link>,
+          label: <Link href="/products/list" className='text-base font-roboto'>Nhóm mặt hàng</Link>,
         },
       ]
     },
@@ -109,7 +111,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     {
       key: '/transports',
       icon: <TruckOutlined className='text-lg!' />,
-      label: <Link href="/transports" className='text-base font-roboto'>Sổ chi tiêu</Link>,
+      label: <Link href="/transports" className='text-base font-roboto'>Sổ tổng hợp</Link>,
     },
     {
       key: '/customers',
@@ -256,13 +258,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             trigger={"click"}
             open={show}
             onOpenChange={(open) => setShow(open)}
-            placement="bottomLeft"
+            placement="bottom"
             arrow={false}
             content={renderSearch}
           >
           <Input 
             placeholder='Tìm kiếm sản phẩm ...' 
-            className='w-[300px]!' 
+            className='flex-1!' 
             value={search}
             onChange={(e) => {
               setShow(true);
@@ -273,6 +275,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             size='large'
           />
           </Popover>
+          <Button color="primary" variant="outlined" icon={<PlusOutlined />} size='large' onClick={() => router.push('/invoices/create')}>Thêm đơn hàng</Button>
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
             <div className='flex items-center gap-2 cursor-pointer leading-none'>
               <Avatar shape='square' src={avatar.src} className='w-10! h-10!' />

@@ -23,7 +23,9 @@ export async function GET(request: NextRequest) {
           invoice:invoices(
             *,
             customer:customers(*),
-            items:invoice_items( * )
+            items:invoice_items( *, 
+              product_unit:product_units(*) 
+            )
           )
         )
       `, { count: 'exact' });
@@ -92,7 +94,7 @@ export async function POST(request: NextRequest) {
     const shippingItems = items.map((item: any) => ({
       shipping_id: shipping.id,
       invoice_id: item.invoice_id,
-      priority: item.priority,
+      prioritized: item.prioritized,
     }));
 
     const { error: itemsError } = await supabase
