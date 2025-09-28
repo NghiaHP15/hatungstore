@@ -292,14 +292,14 @@ const ProductUnitDetailForm = forwardRef(
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
-              label="Tên sản phẩm"
+              label="Tên mặt hàng"
               required
               validateStatus={errors['name'] ? 'error' : ''}
               help={errors['name']}
             >
               <Input
                 value={param.name}
-                placeholder="Tên sản phẩm"
+                placeholder="Tên mặt hàng"
                 onChange={(e) => onChange(e.target.value, "name")}
               />
             </Form.Item>

@@ -383,12 +383,12 @@ const ProductDetailForm = forwardRef(
           </Col>
           <Col span={24}>
             <Form.Item
-              label="Sản phẩm"
+              label="Mặt hàng"
             >
                 {param.units?.length === 0 ? (
                     <>
                     <div className="flex items-center justify-center bg-gray-50 p-2 text-gray-400 font-roboto">
-                        <span className="">Chưa có sản phẩm:</span>
+                        <span className="">Chưa có mặt hàng:</span>
                         <Button type="link" className="text-blue-500 underline cursor-pointer" onClick={() => onAddUnit()}>Thêm mới</Button>
                     </div>
                     </>
@@ -397,7 +397,7 @@ const ProductDetailForm = forwardRef(
                         key="id"
                         columns={[
                           {
-                            title: 'Tên sản phẩm',
+                            title: 'Tên mặt hàng',
                             dataIndex: 'name',
                             render: (text: string, record: ProductUnit, index: number) =>
                               <Input size="large" value={record.name} onChange={(e) => onChangeUnit(e.target.value, 'name', index)} className="w-full" />

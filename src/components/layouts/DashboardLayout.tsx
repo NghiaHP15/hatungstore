@@ -81,7 +81,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     {
       key: '/dashboard',
       icon: <DashboardOutlined className='text-lg!' />,
-      label: <Link href="/dashboard" className='text-base font-roboto'>Dashboard</Link>,
+      label: <Link href="/dashboard" className='text-base font-roboto'>Trang chủ</Link>,
     },
     {
       key: '/products',
@@ -94,7 +94,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         },
         {
           key: '/products/list',
-          label: <Link href="/products/list" className='text-base font-roboto'>Nhóm mặt hàng</Link>,
+          label: <Link href="/products/list" className='text-base font-roboto'>Sản phẩm</Link>,
         },
       ]
     },

@@ -92,7 +92,7 @@ const ProductPage = () => {
         },
         {
             key: 'name',
-            title: "Tên sản phẩm",
+            title: "Tên mặt hàng",
             dataIndex: 'name',
             width: 200,
             render: (_: any, record: UnitProduct) => <span className="line-clamp-2">{record?.name}</span>
