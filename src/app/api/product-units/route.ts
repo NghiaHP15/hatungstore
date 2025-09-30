@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
       })
 
     if (search) {
-      query = query.ilike('product.name_normalized', `%${search}%`);
+      query = query.ilike('name_normalized', `%${search}%`);
     }
 
     if (category) {
