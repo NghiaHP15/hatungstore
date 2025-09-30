@@ -10,6 +10,7 @@ import { Category } from "../types";
 import { useDebounce } from "@/hooks/useDebounce";
 import { categoriesAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
+import { toLowerCaseNonAccent } from "@/lib/utils";
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -288,7 +289,7 @@ const CategoryPage = () => {
             </Button>
           </Space>
           <Space>
-                <Input placeholder="Tìm kiếm ..." suffix={<SearchOutlined className="text-gray-400!" />} onChange={(e) => onChangeSearch(e.target.value, 'search')} />
+                <Input placeholder="Tìm kiếm ..." suffix={<SearchOutlined className="text-gray-400!" />} onChange={(e) => onChangeSearch(toLowerCaseNonAccent(e.target.value), 'search')} />
             </Space>
         </Flex>
         <Form form={form} component={false}>

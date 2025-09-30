@@ -11,6 +11,7 @@ import { categoriesAPI, productsAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
 import { useDebounce } from "@/hooks/useDebounce";
 import ProductDetail from "@/components/model/ProductModel";
+import { toLowerCaseNonAccent } from "@/lib/utils";
 
 const ProductPage = () => {
     const [loading, setLoading] = useState(false);
@@ -185,7 +186,7 @@ const ProductPage = () => {
                     </Button>
                 </Space>
                 <Space>
-                    <Input placeholder="Tìm kiếm ..." suffix={<SearchOutlined className="text-gray-400!" />} onChange={(e) => onChangeSearch(e.target.value, 'search')} />
+                    <Input placeholder="Tìm kiếm ..." suffix={<SearchOutlined className="text-gray-400!" />} onChange={(e) => onChangeSearch(toLowerCaseNonAccent(e.target.value), 'search')} />
                     <Select placeholder="Danh mục" onClear={() => onChangeSearch('', 'category')} fieldNames={{ label: 'name', value: 'id' }} options={categories || []} className="w-[200px] font-roboto" onChange={(e) => onChangeSearch(e, 'category')} />
                 </Space>
                 </Flex>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -6,11 +5,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { Category, ProductUnit, UnitProduct } from "../../types";
 import { no_image } from "@/images";
 import { Button, Flex, Image, Input, Select, Space, Table, Typography } from "antd";
-import { DeleteOutlined, EditOutlined, LeftOutlined, PlusOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
-import { categoriesAPI, productsAPI, productunitsAPI } from "@/lib/api";
+import { DeleteOutlined, EditOutlined, LeftOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
+import { categoriesAPI, productunitsAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
 import { useDebounce } from "@/hooks/useDebounce";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, toLowerCaseNonAccent } from "@/lib/utils";
 import ProductUnitDetail from "@/components/model/UnitProductModel";
 import ProductDetail from "@/components/model/ProductModel";
 
@@ -137,13 +136,13 @@ const ProductPage = () => {
         fetchProducts();
     };
 
-    const onCreateProductUnit = () => {
-        refUnitProduct.current.create();
-    };
+    // const onCreateProductUnit = () => {
+    //     refUnitProduct.current.create();
+    // };
 
-    const onCreateProduct = () => {
-        refProduct.current.create();
-    }
+    // const onCreateProduct = () => {
+    //     refProduct.current.create();
+    // }
 
     const onEdit = (formValue: ProductUnit) => {
         refUnitProduct.current.update({ ...formValue })
@@ -169,14 +168,12 @@ const ProductPage = () => {
         });
     };
 
-
     const onChangeSearch = (value: string, key: string) => {
         setLazyParams({
         ...lazyParams,
         [key]: value,
         });
     };
-    console.log(lazyParams);
     
 
     const onPage = (page: number, pageSize: number) => {
@@ -186,30 +183,32 @@ const ProductPage = () => {
         size: pageSize,
         });
     };
+
     return (
         <DashboardLayout>
             <Flex vertical className="h-full">
                 <Flex justify="space-between" className="mb-3! p-3! rounded-md bg-gray-50">
                 <Space >
-                    <Button 
+                    <div></div>
+                    {/* <Button 
                         type="primary" 
                         className="font-roboto"
                         onClick={onCreateProductUnit} 
                         icon={<PlusOutlined className="text-white"/>}
                     >
                     Thêm mặt hàng
-                    </Button>
-                    <Button 
+                    </Button> */}
+                    {/* <Button 
                         type="primary" 
                         className="font-roboto"
                         onClick={onCreateProduct} 
                         icon={<PlusOutlined className="text-white"/>}
                     >
                     Thêm sản phẩm
-                    </Button>
+                    </Button> */}
                 </Space>
                 <Space>
-                    <Input placeholder="Tìm kiếm ..." suffix={<SearchOutlined className="text-gray-400!" />} onChange={(e) => onChangeSearch(e.target.value, 'search')} />
+                    <Input placeholder="Tìm kiếm ..." suffix={<SearchOutlined className="text-gray-400!" />} onChange={(e) => onChangeSearch(toLowerCaseNonAccent(e.target.value), 'search')} />
                     <Select placeholder="Danh mục" onClear={() => onChangeSearch('', 'category')} fieldNames={{ label: 'name', value: 'id' }} options={categories || []} className="w-[200px] font-roboto" onChange={(e) => onChangeSearch(e, 'category')} />
                 </Space>
                 </Flex>

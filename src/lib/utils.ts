@@ -54,3 +54,16 @@ export const calculateTax = (subtotal: number, taxRate: number = 0.08): number =
 };
 
 export const formatDateTime = (date: string): string => dayjs(date).tz('Asia/Ho_Chi_Minh').format("hh:mm DD/MM/YYYY");
+
+
+export const toLowerCaseNonAccent = (str: string) => {
+  let normalized = str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // xóa dấu
+
+    // Thay thế các ký tự đặc biệt riêng của tiếng Việt
+  normalized = normalized
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "d");
+
+    // Trả về dạng chữ thường
+  return normalized.toLowerCase();
+}

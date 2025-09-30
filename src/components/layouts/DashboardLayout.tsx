@@ -32,11 +32,11 @@ import {
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { avatar } from '@/images';
+import { avatar, no_image } from '@/images';
 import { useDebounce } from '@/hooks/useDebounce';
 import { ProductUnit } from '@/app/types';
 import { productunitsAPI } from '@/lib/api';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, toLowerCaseNonAccent } from '@/lib/utils';
 import { useUserStore } from '@/stores/useUserStore';
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -183,7 +183,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className='w-full px-4 flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
                   <Image
-                    src={item.product?.image_url}
+                    src={item.product?.image_url || no_image.src}
                     alt={item.name}
                     width={50}
                     height={50}
@@ -268,10 +268,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Input 
             placeholder='Tìm kiếm sản phẩm ...' 
             className='flex-1!' 
-            value={search}
             onChange={(e) => {
               setShow(true);
-              setSearch(e.target.value);
+              setSearch(toLowerCaseNonAccent(e.target.value));
             }}
             suffix={<SearchOutlined className='text-lg text-gray-400!' />}
             allowClear

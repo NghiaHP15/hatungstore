@@ -6,7 +6,7 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { useDebounce } from "@/hooks/useDebounce";
 import { no_image } from "@/images";
 import { categoriesAPI, customersAPI, invoicesAPI, productsAPI } from "@/lib/api";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, toLowerCaseNonAccent } from "@/lib/utils";
 import { CloseOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Col, Image, Input, InputNumber, List, message, Popover, Row, Select, Space, Table, Typography } from "antd";
 import _ from "lodash";
@@ -235,7 +235,7 @@ const CreateInvoice = () => {
                             <span className="text-base font-roboto">Danh sách sản phẩm</span>
                             <div className="flex items-center gap-2">
                                 <span className="w-25 text-base font-roboto">Sản phẩm: </span>
-                                <Input size="large" placeholder="Nhập tìm kiếm..." value={searchProduct} onChange={(e) => setSearchProduct(e.target.value)} />
+                                <Input size="large" placeholder="Nhập tìm kiếm..." onChange={(e) => setSearchProduct(toLowerCaseNonAccent(e.target.value))} />
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className="w-25 text-base font-roboto">Danh mục: </span>
