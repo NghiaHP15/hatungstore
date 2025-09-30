@@ -205,7 +205,7 @@ const ProductPage = () => {
                         onClick={onCreateProduct} 
                         icon={<PlusOutlined className="text-white"/>}
                     >
-                    Thêm nhóm mặt hàng
+                    Thêm sản phẩm
                     </Button>
                 </Space>
                 <Space>

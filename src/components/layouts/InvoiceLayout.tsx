@@ -380,14 +380,14 @@ const [products, setProducts] = useState<Product[]>([]);
                                 renderItem={(item) => (
                                     <List.Item 
                                         key={item.id}
-                                        className='group w-full! pt-4! pb-4! px-2! rounded-sm hover:bg-gray-100 cursor-pointer transition-all duration-100'
+                                        className='relative z-1 group w-full! pt-4! pb-4! px-2! rounded-sm hover:bg-gray-100 cursor-pointer transition-all duration-100'
                                     >
                                         <div className="flex items-center gap-3 w-full">
                                             <Image src={item.product_unit?.image_url || no_image.src} preview={false} alt="" width={55} height={55} className="rounded-md shadow p-1" />
                                             <div className="flex-1">
                                                 <div className="flex items-center justify-between w-full">
                                                     <span className="font-roboto text-base line-clamp-1">{item.product_unit?.name}</span>
-                                                    <span className="font-roboto text-base text-red-500 line-clamp-1">{formatCurrency(item.total_price)}</span>
+                                                    <span className="font-roboto text-base text-red-500 line-clamp-1 group-hover:pr-[30px]! transition-all duration-100">{formatCurrency(item.total_price)}</span>
                                                 </div>
                                                 <div className="flex justify-end gap-2 w-full">
                                                     <InputNumber
@@ -409,14 +409,18 @@ const [products, setProducts] = useState<Product[]>([]);
                                                     />
                                                 </div>
                                             </div>
-                                            <Button 
+                                            {/* <Button 
                                                 type="link" 
                                                 size="large"
                                                 icon={<CloseOutlined />}
                                                 onClick={() => handleRemoveProduct(item)}
                                                 className="group-hover:w-[35px]! w-[0px]! overflow-hidden" 
-                                            />
+                                            /> */}
                                         </div>
+                                        <CloseOutlined  
+                                            onClick={() => handleRemoveProduct(item)}
+                                            className="absolute z-2 top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-100 bg-red-400 text-white! p-1 rounded-full " 
+                                        />
                                     </List.Item>
                                 )}
                                 />

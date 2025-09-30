@@ -37,6 +37,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { ProductUnit } from '@/app/types';
 import { productunitsAPI } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
+import { useUserStore } from '@/stores/useUserStore';
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -54,7 +55,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [loadSearch, setLoadSearch] = useState<boolean>(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
+  const user = useUserStore((state) => state.user);
+
   const {
     token: { colorBgContainer, colorPrimary },
   } = theme.useToken();

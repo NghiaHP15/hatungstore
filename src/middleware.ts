@@ -1,29 +1,35 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { createServerSupabase } from './lib/superbaseServer';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { createServerSupabase } from "@/lib/superbaseServer";
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next({ request: { headers: req.headers } })
-
   const supabase = await createServerSupabase();
-
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  
-  // 🔒 Protect dashboard
-  if (req.nextUrl.pathname.startsWith('/dashboard') && !session) {
-    return NextResponse.redirect(new URL('/auth/login', req.url))
+
+  const { pathname } = req.nextUrl;
+
+  // Danh sách route không cần đăng nhập
+  const publicPaths = ["/auth", "/public", "/about"];
+
+  const isPublic = publicPaths.some((path) =>
+    pathname.startsWith(path)
+  );
+
+  // 🔒 Nếu chưa login mà vào trang không phải public → redirect về /auth/login
+  if (!isPublic && !session) {
+    return NextResponse.redirect(new URL("/auth/login", req.url));
   }
 
-  // 🔄 Redirect logged-in users away from /auth/*
-  if (req.nextUrl.pathname.startsWith('/auth') && session) {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
+  // 🔄 Nếu đã login mà vào /auth/* → redirect về /dashboard
+  if (pathname.startsWith("/auth") && session) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  return res
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/auth/:path*'],
-}
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"], // chạy cho mọi route trừ file tĩnh
+};

@@ -4,11 +4,12 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Database } from '@/app/types/supabase';
 import { supabaseClient } from '@/lib/superbaseClient';
+import { useUserStore } from '@/stores/useUserStore';
 
 export type AppUser = Database['public']['Tables']['profiles']['Row'] | null;
 
 export function useAuth() {
-  const [user, setUser] = useState<AppUser>(null);
+  const { user, setUser, clearUser } = useUserStore();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -30,10 +31,13 @@ export function useAuth() {
       const { data: { user } } = await supabaseClient.auth.getUser();
 
       if (user) {
-        const profile = await fetchProfile(user.id);
-        if (isMounted) setUser(profile);
+        // Chỉ fetch profile nếu store chưa có
+        if (!useUserStore.getState().user) {
+          const profile = await fetchProfile(user.id);
+          if (isMounted) setUser(profile);
+        }
       } else {
-        if (isMounted) setUser(null);
+        if (isMounted) clearUser();
       }
 
       if (isMounted) setLoading(false);
@@ -47,7 +51,7 @@ export function useAuth() {
           const profile = await fetchProfile(session.user.id);
           if (isMounted) setUser(profile);
         } else {
-          if (isMounted) setUser(null);
+          if (isMounted) clearUser();
         }
         if (isMounted) setLoading(false);
       }
@@ -57,12 +61,13 @@ export function useAuth() {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, [fetchProfile]);
+  }, [fetchProfile, setUser, clearUser]);
 
   const signOut = useCallback(async () => {
     await supabaseClient.auth.signOut();
+    clearUser();
     router.push('/auth/login');
-  }, [router]);
+  }, [router, clearUser]);
 
   return { user, loading, signOut };
 }
