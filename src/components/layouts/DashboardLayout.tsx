@@ -66,7 +66,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const fetchProducts = async () => {
       try {
         setLoadSearch(true);
-        const res = await productunitsAPI.getProductUnits({ limit: 15, search: deboundedSearch });
+        const res = await productunitsAPI.getProductUnits({ limit: 10, search: deboundedSearch });
         if (res.data.product_units) {
           setProducts(res.data.product_units);
         }
