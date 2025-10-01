@@ -150,7 +150,6 @@ const CategoryPage = () => {
         });
     };
 
-
     const onChangeSearch = (value: string) => {
         setLazyParams({
         ...lazyParams,
@@ -165,6 +164,7 @@ const CategoryPage = () => {
         size: pageSize,
         });
     };
+
     return (
         <DashboardLayout>
             <Flex vertical className="h-full">

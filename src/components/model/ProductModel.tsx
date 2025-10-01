@@ -12,6 +12,7 @@ import { publicId } from "../upload/utils";
 import { v4 as uuid } from "uuid";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useDebounce } from "@/hooks/useDebounce";
+import { toLowerCaseNonAccent } from "@/lib/utils";
 
 type Props = {
     reload: () => void
@@ -357,7 +358,7 @@ const ProductDetailForm = forwardRef(
                 value={param.category_id}
                 showSearch
                 filterOption={false}
-                onSearch={(e) => setSearchCategory(e)}
+                onSearch={(e) => setSearchCategory(toLowerCaseNonAccent(e))}
                 fieldNames={{ label: 'name', value: 'id' }}
                 options={categories || []}
                 placeholder="Danh mục"

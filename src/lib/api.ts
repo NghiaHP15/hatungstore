@@ -94,6 +94,7 @@ export const shippingAPI = {
   getShipping: (id: string) => api.get(`/shippings/${id}`),
   createShipping: (data: any) => api.post('/shippings', data),
   updateShipping: (id: string, data: any) => api.put(`/shippings/${id}`, data),
+  updateShippingStatus: (data: any) => api.put(`/shippings/change-status`, data),
   deleteShipping: (id: string) => api.delete(`/shippings/${id}`),
   getPrioritizedShippings: (params: any) => api.get('/shippings/prioritized', { params }),
 };

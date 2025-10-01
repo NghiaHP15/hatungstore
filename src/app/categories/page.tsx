@@ -303,7 +303,7 @@ const CategoryPage = () => {
               },
             }}
             rowClassName="editable-row"
-            scroll={{ x: "w-full" }}
+            scroll={{ x: 'w-full', y: 'calc(100vh - 350px)' }}
             loading={loading}
             pagination={{
               responsive: true,

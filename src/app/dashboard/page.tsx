@@ -1,17 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useEffect, useState } from 'react';
-import { Card, Row, Col, Statistic, Table, Tag } from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import { Card, Row, Col, Statistic, Table, Tag, Space, Button } from 'antd';
 import {
   ShoppingCartOutlined,
   TruckOutlined,
   SnippetsOutlined,
+  PrinterOutlined,
 } from '@ant-design/icons';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import { formatCurrency } from '@/lib/utils';
 import { invoicesAPI, reportAPI } from '@/lib/api';
 import { Invoice } from '../types';
+import InvoiceDetail from '@/components/model/InvoiceModel';
 
 interface DashboardStats {
   invoiceDelivered: number;
@@ -25,6 +28,7 @@ export default function DashboardPage() {
     invoicePending: 0,
     totalInvoices: 0,
   });
+  const refDetail = useRef<any>(null);
 
   const [recentSales, setRecentSales] = useState([]);
 
@@ -61,19 +65,34 @@ export default function DashboardPage() {
     // This would normally fetch from your API
   };
 
+  const onView = (formValue: Invoice) => {
+    refDetail.current.view({ ...formValue })
+  };
+
+  const reload = () => {
+    fetchDashboardInvoices();
+  };
+
   const salesColumns = [
     {
       title: 'Invoice #',
       dataIndex: 'invoice_code',
       key: 'invoice_code',
-      width: 150,
+      width: 100,
     },
     {
       title: 'Khách hàng',
       dataIndex: 'customer_name',
       key: 'customer_name',
-      width: 200,
+      width: 150,
       render: (_: string, record: Invoice) => record.customer?.name,
+    },
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      key: 'address',
+      width: 200,
+      render: (_: string, record: Invoice) => record.customer?.address,
     },
     {
       title: 'Tổng tiền',
@@ -97,9 +116,20 @@ export default function DashboardPage() {
       title: 'Ngày tạo',
       dataIndex: 'created_at',
       key: 'created_at',
-      width: 150,
+      width: 100,
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
+    {
+      key: 'action',
+      title: "",
+      align: "center" as const, 
+      width: 100,
+      render: (_: any, record: Invoice) => (
+      <Space key={record.id}>
+        <Button icon={<PrinterOutlined className="text-blue-500!"/>} className="border-blue-500!" onClick={() => onView(record)} />
+      </Space>
+      ),
+    },  
   ];
 
   return (
@@ -152,6 +182,7 @@ export default function DashboardPage() {
                 pagination={{ pageSize: 10 }}
                 size="small"
               />
+              <InvoiceDetail ref={refDetail} reload={reload} />
             </Card>
           </Col>
         </Row>

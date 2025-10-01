@@ -6,7 +6,7 @@ import { MODE } from "@/app/types/enum";
 import _ from "lodash";
 import { invoicesAPI, shippingAPI } from "@/lib/api";
 import { Button, Input, List, message, Modal, Space } from "antd";
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { CloseOutlined, SearchOutlined, SwapOutlined } from "@ant-design/icons";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -155,22 +155,29 @@ const ShippingDetailForm = forwardRef(
 
     const [messageApi, contextHolder] = message.useMessage();
 
-    useEffect(()=>{
-        const fetchInvoice = async () => {
-            try {
-                setLoadingInvoice(true);
-                const res = await invoicesAPI.getInvoices({ limit: 1000, status: false, search: debouncedInvoice });
-                if (res.data.invoices) {
-                    setInvoices(res.data.invoices);
-                }
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoadingInvoice(false);
+    const fetchInvoice = useCallback(async () => {
+        try {
+            setLoadingInvoice(true);
+            const res = await invoicesAPI.getInvoices({ limit: 1000, status: false, search: debouncedInvoice });
+            if (res.data.invoices) {
+                setInvoices(res.data.invoices.filter((item: Invoice) => item.status === false));
             }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoadingInvoice(false);
         }
+    }, [debouncedInvoice])
+
+    useEffect(()=>{
         fetchInvoice();
-    },[debouncedInvoice, reload]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[reload, debouncedInvoice, closeModal]);
+
+    useEffect(() => {
+      setInvoices([]);
+      setSearchInvoice('');      
+    }, [closeModal]);
 
     const update = async (data: Shipping) => {
       const _param: Shipping = _.cloneDeep(data);
@@ -246,26 +253,45 @@ const ShippingDetailForm = forwardRef(
 
     const addShippingBefore = (invoice: Invoice) => {
         const _param: Shipping = _.cloneDeep(param);
-        _param.items?.push({ ...emptyItem, id: uuid(), invoice_id: invoice.id, invoice: invoice, prioritized: true });
+        _param.items?.push({ ...emptyItem, id: uuid(), invoice_id: invoice.id, invoice: {...invoice, status: true}, prioritized: true });
         setParam(_param);
     }
 
     const addShippingAfter = (invoice: Invoice) => {
         const _param: Shipping = _.cloneDeep(param);
-        _param.items?.push({ ...emptyItem, id: uuid(), invoice_id: invoice.id, invoice: invoice, prioritized: false });
+        _param.items?.push({ ...emptyItem, id: uuid(), invoice_id: invoice.id, invoice: {...invoice, status: true}, prioritized: false });
         setParam(_param);
     }
 
     const resetBefore = () => {
-        const _param: Shipping = _.cloneDeep(param);
+      const _param: Shipping = _.cloneDeep(param);
+      const _invoices: Invoice[] = _.cloneDeep(invoices);
+      if(mode === MODE.UPDATE){
+        const items = _param.items?.filter((item) => item.prioritized).map((item) => ({...item.invoice, status: false}) as Invoice ) || [];
+        _param.items = _param.items?.filter((item) => !item.prioritized);
+        setInvoices([..._invoices, ...items]);
+        setParam(_param);
+      }
+      else {
         _param.items = _param.items?.filter((item) => !item.prioritized);
         setParam(_param);
+      }
     }
+    
 
     const resetAfter = () => {
-        const _param: Shipping = _.cloneDeep(param);
+      const _param: Shipping = _.cloneDeep(param);
+      const _invoices: Invoice[] = _.cloneDeep(invoices);
+      if(mode === MODE.UPDATE){
+        const items = _param.items?.filter((item) => !item.prioritized).map((item) => ({...item.invoice, status: false}) as Invoice ) || [];
+        _param.items = _param.items?.filter((item) => item.prioritized);
+        setInvoices([..._invoices, ...items]);
+        setParam(_param);
+      }
+      else {
         _param.items = _param.items?.filter((item) => item.prioritized);
         setParam(_param);
+      }
     }
 
     const transfer = (record: ShippingItem) => {
@@ -275,9 +301,18 @@ const ShippingDetailForm = forwardRef(
     }
 
     const handleRemoveItem = (record: ShippingItem) => {
+      if(mode === MODE.UPDATE){
+        const _param: Shipping = _.cloneDeep(param);
+        const _invoices: Invoice[] = _.cloneDeep(invoices);
+        _param.items = _param.items?.filter((item) => item.id !== record.id);
+        setParam(_param);
+        if(record.invoice)
+        setInvoices([..._invoices, record.invoice]);
+      } else {
         const _param: Shipping = _.cloneDeep(param);
         _param.items = _param.items?.filter((item) => item.id !== record.id);
         setParam(_param);
+      }
     }
   
     return (
@@ -343,7 +378,7 @@ const ShippingDetailForm = forwardRef(
                         ref={provided.innerRef}
                         className="h-[750px] px-2! overflow-auto"
                       >
-                        {param.items && param.items.filter((item) => item.prioritized === true).map((item, index) => (
+                        {param.items && param.items.filter((item) => (item.prioritized === true && item.invoice?.status === true)).map((item, index) => (
                           <Draggable key={item.id} draggableId={item.id || ''} index={index}>
                             {(provided) => (
                               <li
@@ -394,7 +429,7 @@ const ShippingDetailForm = forwardRef(
                         ref={provided.innerRef}
                         className="h-[750px] px-2! overflow-auto"
                       >
-                        {param.items && param.items.filter((item) => item.prioritized === false).map((item, index) => (
+                        {param.items && param.items.filter((item) => (item.prioritized === false && item.invoice?.status === true)).map((item, index) => (
                           <Draggable key={item.id} draggableId={item.id || ''} index={index}>
                             {(provided) => (
                               <li

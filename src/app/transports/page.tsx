@@ -4,7 +4,7 @@
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import React, { useEffect, useRef, useState } from "react";
 import { InvoiceItem, Shipping, ShippingItem } from "../types";
-import { Button, DatePicker, Flex, Input, Select, Space, Table, Tag, Typography } from "antd";
+import { Button, DatePicker, Flex, Input, Popover, Select, Space, Table, Tag, Typography } from "antd";
 import { DeleteOutlined, EditOutlined, LeftOutlined, PlusOutlined, PrinterOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
 import { shippingAPI } from "@/lib/api";
 import PageSizeOption from "@/components/PageSizeOption";
@@ -111,7 +111,21 @@ const TransportPage = () => {
             dataIndex: 'status',
             title: "Trạng thái",
             width: 100,
-            render: (_: any, record: Shipping) => <span className="line-clamp-2">{record.status ? <Tag className="font-roboto" color="green">Đã giao</Tag> : <Tag className="font-roboto" color="red">Chưa giao</Tag>}</span>
+            render: (_: any, record: Shipping) => (
+                <Popover
+                    trigger={"click"}
+                    placement="bottom"
+                    arrow={false}
+                    content={
+                        <div className="flex flex-col gap-2">
+                            <Tag className="font-roboto text-sm! w-full h-full cursor-pointer" color={'red'} onClick={() => handleUpdateStatus(record.id, false)}>Chưa giao</Tag>
+                            <Tag className="font-roboto text-sm! w-full h-full cursor-pointer" color={'green'} onClick={() => handleUpdateStatus(record.id, true)}>Đã giao</Tag>
+                        </div>
+                    }
+                >
+                    <span className="line-clamp-2">{record.status ? <Tag className="cursor-pointer text-sm! font-roboto" color="green">Đã giao</Tag> : <Tag className="font-roboto" color="red">Chưa giao</Tag>}</span>
+                </Popover>
+            )
         },
         {
             key: 'created_at',
@@ -189,6 +203,19 @@ const TransportPage = () => {
         size: pageSize,
         });
     };
+
+    const handleUpdateStatus = async (id: string, value: boolean) => {
+        try {
+            setLoading(true);
+            const res = await shippingAPI.updateShippingStatus({ ids: [id], status: value });
+            if(res) reload();
+            } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <DashboardLayout>
             <Flex vertical className="h-full">
