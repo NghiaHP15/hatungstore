@@ -283,6 +283,8 @@ const [products, setProducts] = useState<Product[]>([]);
                                     placeholder="Chọn danh mục"
                                     fieldNames={{ label: 'name', value: 'id' }}
                                     options={categories || []}
+                                    allowClear
+                                    onClear={() => setLazyParams({ ...lazyParams, category: "" })} 
                                     onChange={(value) => setLazyParams({ ...lazyParams, category: value })}
                                 />
                             </div>

@@ -187,7 +187,14 @@ const ProductPage = () => {
                 </Space>
                 <Space>
                     <Input placeholder="Tìm kiếm ..." suffix={<SearchOutlined className="text-gray-400!" />} onChange={(e) => onChangeSearch(toLowerCaseNonAccent(e.target.value), 'search')} />
-                    <Select placeholder="Danh mục" onClear={() => onChangeSearch('', 'category')} fieldNames={{ label: 'name', value: 'id' }} options={categories || []} className="w-[200px] font-roboto" onChange={(e) => onChangeSearch(e, 'category')} />
+                    <Select 
+                        placeholder="Danh mục" 
+                        allowClear
+                        onClear={() => onChangeSearch('', 'category')} 
+                        fieldNames={{ label: 'name', value: 'id' }} 
+                        options={categories || []} className="w-[200px] font-roboto" 
+                        onChange={(e) => onChangeSearch(e, 'category')} 
+                    />
                 </Space>
                 </Flex>
                 <Table

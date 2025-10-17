@@ -101,7 +101,6 @@ const CreateInvoice = () => {
             );
         } else {
             setListOrder([
-                ...listOrder, 
                 { 
                     id: uuid(),
                     product_unit_id: unit.id, 
@@ -109,7 +108,8 @@ const CreateInvoice = () => {
                     unit_price: unit.price, 
                     total_price: unit.price,
                     product_unit: unit
-                }
+                },
+                ...listOrder, 
             ]);
         }
     };
@@ -243,6 +243,8 @@ const CreateInvoice = () => {
                                     size="large"
                                     className="font-roboto"
                                     style={{ width: '100%' }}
+                                    allowClear
+                                    onClear={() => setLazyParams({ ...lazyParams, category: "" })} 
                                     placeholder="Chọn danh mục"
                                     fieldNames={{ label: 'name', value: 'id' }}
                                     options={categories || []}

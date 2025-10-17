@@ -78,7 +78,7 @@ export default function DashboardPage() {
       title: 'Invoice #',
       dataIndex: 'invoice_code',
       key: 'invoice_code',
-      width: 100,
+      width: 150,
     },
     {
       title: 'Khách hàng',
@@ -136,7 +136,7 @@ export default function DashboardPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Stats Cards */}
-        <Row gutter={16}>
+        {/* <Row gutter={16}>
           <Col xs={24} lg={8}>
             <Card>
               <Statistic
@@ -168,12 +168,39 @@ export default function DashboardPage() {
               />
             </Card>
           </Col>
-        </Row>
+        </Row> */}
 
         {/* Tables */}
         <Row gutter={16}>
           <Col sm={24} >
             <Card >
+              <div className='flex items-center justify-between mb-4'>
+                <div className='border-r w-[33.3%] border-gray-100!'>
+                  <Statistic
+                    title={<span className='text-lg text-gray-700!'>Đơn đã giao</span>}
+                    value={stats.invoiceDelivered}
+                    formatter={(value) => formatCurrency(value as number)}
+                    prefix={<TruckOutlined />}
+                    valueStyle={{ color: '#3f8600' }}
+                  />
+                </div>
+                <div className='border-r w-[33.3%] border-gray-100!'>
+                  <Statistic
+                    title={<span className='text-lg text-gray-700!'>Đơn chưa giao</span>}
+                    value={stats.invoicePending}
+                    prefix={<ShoppingCartOutlined />}
+                    valueStyle={{ color: '#1890ff' }}
+                  />
+                </div>
+                <div>
+                  <Statistic
+                    title={<span className='text-lg text-gray-700!'>Tổng đơn hàng</span>}
+                    value={stats.totalInvoices}
+                    prefix={<SnippetsOutlined />}
+                    valueStyle={{ color: '#722ed1' }}
+                  />
+                </div>
+              </div>
               <h2 className='text-base font-roboto mb-2 border-l-3 border-red-400 pl-2'>Đơn hàng chưa chuyển</h2>
               <Table
                 key="id"
