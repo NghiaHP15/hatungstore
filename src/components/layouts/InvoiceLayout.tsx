@@ -127,12 +127,12 @@ const [products, setProducts] = useState<Product[]>([]);
         unit.image_url = product.image_url;
         const checkProduct = listOrder.find((item) => item.product_unit_id === unit.id);
         if (checkProduct) {
-            setListOrder(
-                listOrder.map((item) => (item.product_unit_id === unit.id ? 
-                    { ...item, quantity: item.quantity + 1 } 
-                    : item
-                ))
-            );
+            // setListOrder(
+            //     listOrder.map((item) => (item.product_unit_id === unit.id ? 
+            //         { ...item, quantity: item.quantity + 1 } 
+            //         : item
+            //     ))
+            // );
         } else {
             setListOrder([
                 ...listOrder, 

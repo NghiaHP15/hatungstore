@@ -21,7 +21,7 @@ const CategoryPage = () => {
         size: 20,
         search: "",
         limit: 1000,
-        status: false,
+        status: null,
         start_date: "",
         end_date: "",
     });
@@ -274,6 +274,12 @@ const CategoryPage = () => {
                     ),
                     onChange: onPage,
                 }}
+                footer={() => (
+                    <div className="flex justify-between font-roboto">
+                        <span className="font-medium">Tổng tiền</span>
+                        <span className="font-medium text-base">{formatCurrency(data.reduce((total, item) => total + (item.total_amount || 0), 0))}</span>
+                    </div>
+                )}
                 columns={column}
                 dataSource={data}
                 />

@@ -145,12 +145,12 @@ const ShippingViewDetailForm = forwardRef(
         // Gom theo product_unit.id
         const prioritizedProducts: Record<
             string,
-            { product_unit: any; totalQuantity: number; customers: { customer: any; quantity: number }[] }
+            { product_unit: any; totalQuantity: number; customers: { customer: any; quantity: number, product_unit: string }[] }
         > = {};
 
         const nonPrioritizedProducts: Record<
             string,
-            { product_unit: any; totalQuantity: number; customers: { customer: any; quantity: number }[] }
+            { product_unit: any; totalQuantity: number; customers: { customer: any; quantity: number, product_unit: string }[] }
         > = {};
 
         if (shipping.items && shipping.items.length > 0) {
@@ -177,7 +177,7 @@ const ShippingViewDetailForm = forwardRef(
                 if (existingCustomer) {
                 existingCustomer.quantity += invItem.quantity;
                 } else {
-                target[pu.id].customers.push({ customer, quantity: invItem.quantity });
+                target[pu.id].customers.push({ customer, quantity: invItem.quantity, product_unit: pu.unit_name });
                 }
             }
             }
@@ -200,7 +200,7 @@ const ShippingViewDetailForm = forwardRef(
     const submitPrint = useReactToPrint({
             contentRef:  shippingRef, 
             pageStyle: `
-            @page { size: A4 portrait; margin: 10mm; }
+            @page { size: A5 portrait; margin: 10mm; padding: 5mm; }
             @media print {
                 body { -webkit-print-color-adjust: exact; }
             }
@@ -230,7 +230,7 @@ const ShippingViewDetailForm = forwardRef(
                                 <>
                                 <div key={customer.customer.id}>
                                     <span className="text-sm font-roboto text-gray-400">{customer.customer.name}</span>
-                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity}</span></span>
+                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity} {customer.product_unit}</span></span>
                                 </div>
                                 <span className="text-sm font-roboto text-gray-400">{item.customers.length - 1 === index ? "" : " - "}</span>
                                 </>

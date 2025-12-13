@@ -54,8 +54,19 @@ const SettingPage = () => {
     try{
       setLoading(true);
       const res = await storeAPI.updateStore(data);
-      if(res.data)
-      setData(res.data);
+      if(res.data){
+        setData(res.data);
+        setEdit({
+          store: false,
+          address: false,
+          phone: false,
+          email: false,
+          owner: false,
+          name_bank: false,
+          number_bank: false,
+          account_bank: false,
+        });
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -172,11 +183,11 @@ const SettingPage = () => {
                   setLoadImage(true);
                   const formData = new FormData();
                   formData.append('image', file as Blob);
-                  if(data.qr_code) {
-                  const id = publicId(data.qr_code);
-                  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                  id && await uploadAPI.deleteImage(id);
-                  }
+                  // if(data.qr_code) {
+                  // const id = publicId(data.qr_code);
+                  // // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                  // id && await uploadAPI.deleteImage(id);
+                  // }
                   const res = await uploadAPI.uploadImage(formData);
                   if(res){
                   setData({ ...data, qr_code: res.data.url });

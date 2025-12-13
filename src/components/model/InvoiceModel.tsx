@@ -190,7 +190,7 @@ const InvoiceDetailForm = forwardRef(
     const handlePrint = useReactToPrint({
         contentRef:  invoiceRef, 
         pageStyle: `
-        @page { size: A4 portrait; margin: 10mm; }
+        @page { size: A5 portrait; margin: 10mm; padding: 5mm; }
         @media print {
             body { -webkit-print-color-adjust: exact; }
         }
@@ -271,6 +271,7 @@ const InvoiceDetailForm = forwardRef(
                   <div className='mt-4'>
                     <Table
                       key="id"
+                      className="invoice-detail"
                       size={'small'}
                       bordered={false}
                       columns={[
@@ -284,7 +285,7 @@ const InvoiceDetailForm = forwardRef(
                               title: "Sản phẩm",
                               dataIndex: 'name',
                               key: 'name',
-                              render: (_, record) => <span>{record.product_unit?.name}</span>,
+                              render: (_, record) => <span className="text-base font-medium text-gray-800">{record.product_unit?.name}</span>,
                           },
                           {
                               title: "Số lượng",
@@ -312,7 +313,7 @@ const InvoiceDetailForm = forwardRef(
                               dataIndex: 'total_price',
                               align: 'right',
                               key: 'total_price',
-                              render: (_, record) => <span>{formatCurrency(record.total_price)}</span>,
+                              render: (_, record) => <span className="text-base font-medium text-gray-800">{formatCurrency(record.total_price)}</span>,
                           },
                       ]}
                       dataSource={param.items}

@@ -37,6 +37,10 @@ body {
   display: none !important;
 }
 
+.invoice-detail .ant-table-thead .ant-table-cell {
+  background-color: transparent !important;
+}
+
 .ant-input-number-input,
 .ant-popover-title,
 .ant-statistic-title,
