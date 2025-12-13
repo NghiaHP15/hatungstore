@@ -3,7 +3,6 @@
 
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { UploadImage } from "@/components/upload/upload-image";
-import { publicId } from "@/components/upload/utils";
 import { storeAPI, uploadAPI } from "@/lib/api";
 import { CloseOutlined, FormOutlined } from "@ant-design/icons";
 import { Button, Input, theme } from "antd";
