@@ -261,7 +261,7 @@ const ShippingViewDetailForm = forwardRef(
                                 <>
                                 <div key={customer.customer.id}>
                                     <span className="text-sm font-roboto text-gray-400">{customer.customer.name}</span>
-                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity}</span></span>
+                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity} {customer.product_unit}</span></span>
                                 </div>
                                 <span className="text-sm font-roboto text-gray-400">{item.customers.length - 1 === index ? "" : " - "}</span>
                                 </>
