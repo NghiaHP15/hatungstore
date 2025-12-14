@@ -206,8 +206,8 @@ const InvoiceDetailForm = forwardRef(
         </>) : 
         (
             <div id="invoice-section" ref={invoiceRef}>
-                <div className='grid grid-cols-5 font-roboto'>
-                    <div className="col-span-2 border-b border-gray-300">
+                <div className='grid grid-cols-6 font-roboto'>
+                    <div className="col-span-3 border-b border-gray-300">
                         <h1 className="text-5xl uppercase font-medium">{store.store}</h1>
                         <div className='font-base'>
                             <span>Địa chỉ: </span>
@@ -218,11 +218,11 @@ const InvoiceDetailForm = forwardRef(
                             <span>{store.phone}</span>
                         </div>
                     </div>
-                    <div className="col-span-1 border-b border-gray-300">
+                    <div className="col-span-1 border-b border-gray-300 flex justify-center items-center">
                         <Image
-                        width={100}
-                        height={100}
-                            src={ store.qr_code || qr_pay.src}
+                        width={70}
+                        height={70}
+                        src={ store.qr_code || qr_pay.src}
                         alt="logo"
                         preview={false}
                         />
@@ -256,7 +256,7 @@ const InvoiceDetailForm = forwardRef(
                             <span>{param.customer?.address}</span>
                         </div>
                     </div>
-                    <div className="col-span-2 mt-2">
+                    <div className="col-span-3 mt-2">
                         <div className=''>
                             <span>Mã đơn hàng: </span>
                             <span>{param.invoice_code}</span>
@@ -288,14 +288,14 @@ const InvoiceDetailForm = forwardRef(
                               render: (_, record) => <span className="text-base font-medium text-gray-800">{record.product_unit?.name}</span>,
                           },
                           {
-                              title: "Số lượng",
+                              title: "SL",
                               dataIndex: 'count',
                               key: 'count',
                               align: 'center',
                               render: (_, record) => <span>{record.quantity}</span>,
                           },
                           {
-                              title: "Đơn vị tính",
+                              title: "DVT",
                               dataIndex: 'unit_name',
                               align: 'right',
                               key: 'unit_name',
@@ -323,7 +323,7 @@ const InvoiceDetailForm = forwardRef(
                   <div className='mt-4'>
                       <div className='flex justify-end items-center font-roboto'>
                           <span className='font-medium w-50'>Tổng tiền:</span>
-                          <span className="font-medium text-base">{formatCurrency(param.total_amount || 0)}</span>
+                          <span className="font-medium text-base mr-2">{formatCurrency(param.total_amount || 0)}</span>
                       </div>
                   </div>
                 </div>
