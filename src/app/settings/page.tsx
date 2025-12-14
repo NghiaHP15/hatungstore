@@ -150,23 +150,23 @@ const SettingPage = () => {
           </div>
           <div className="flex items-center gap-2 ">
             <span className="">Tên tài khoản:</span>
-            {edit.number_bank ? (
-              <Input type="text" suffix={<CloseOutlined style={{color: colorPrimary}} onClick={() => setEdit({...edit, number_bank: false})}/>} value={data.number_bank} onChange={(e) => setData({ ...data, number_bank: e.target.value })} />
-            ): (
-            <div className="flex items-center">
-              <span>{data.number_bank}</span>
-              <Button type="link" icon={<FormOutlined style={{color: colorPrimary}}/>} onClick={() => setEdit({...edit, number_bank: true})} />
-            </div>
-            )}
-          </div>
-          <div className="flex items-center gap-2 ">
-            <span className="">Số tài khoản:</span>
             {edit.account_bank ? (
               <Input type="text" suffix={<CloseOutlined style={{color: colorPrimary}} onClick={() => setEdit({...edit, account_bank: false})}/>} value={data.account_bank} onChange={(e) => setData({ ...data, account_bank: e.target.value })} />
             ): (
             <div className="flex items-center">
               <span>{data.account_bank}</span>
               <Button type="link" icon={<FormOutlined style={{color: colorPrimary}}/>} onClick={() => setEdit({...edit, account_bank: true})} />
+            </div>
+            )}
+          </div>
+          <div className="flex items-center gap-2 ">
+            <span className="">Số tài khoản:</span>
+            {edit.number_bank ? (
+              <Input type="text" suffix={<CloseOutlined style={{color: colorPrimary}} onClick={() => setEdit({...edit, number_bank: false})}/>} value={data.number_bank} onChange={(e) => setData({ ...data, number_bank: e.target.value })} />
+            ): (
+            <div className="flex items-center">
+              <span>{data.number_bank}</span>
+              <Button type="link" icon={<FormOutlined style={{color: colorPrimary}}/>} onClick={() => setEdit({...edit, number_bank: true})} />
             </div>
             )}
           </div>

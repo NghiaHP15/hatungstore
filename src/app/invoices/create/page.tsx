@@ -263,10 +263,10 @@ const CreateInvoice = () => {
                                 total: products.length,
                                 itemRender(page, type, originalElement) {
                                 if (type === "prev") {
-                                    return <Button size='small' className='mr-1 ml-2 !rounded-sm'  icon={<LeftOutlined style={{ fontSize: '12px' }} />}></Button>;
+                                    return <Button size='small' className='mr-1 ml-2 '  icon={<LeftOutlined style={{ fontSize: '12px' }} />}></Button>;
                                 }
                                 if (type === "next") {
-                                    return <Button size='small' className='ml-1 mr-2 !rounded-sm'  icon={<RightOutlined style={{ fontSize: '12px' }} />}></Button>;
+                                    return <Button size='small' className='ml-1 mr-2'  icon={<RightOutlined style={{ fontSize: '12px' }} />}></Button>;
                                 }
                                 if (type === "page") {
                                     return <a>{page}</a>;
@@ -276,21 +276,6 @@ const CreateInvoice = () => {
                                 pageSize: lazyParams.size,
                                 size: 'small',
                                 current: lazyParams.page + 1,
-                                showTotal: (total) => (
-                                <div className="absolute left-2">
-                                    <Space>
-                                    <Typography.Text className="text-sm font-normal font-roboto">
-                                        Hiển thị
-                                        {total > 0
-                                        ? `${lazyParams.page * lazyParams.size + 1} - ${Math.min(
-                                            (lazyParams.page + 1) * lazyParams.size,
-                                            total,
-                                            )} (${total})`
-                                        : '0 / 0'}
-                                    </Typography.Text>
-                                    </Space>
-                                </div>
-                                ),
                                 onChange: onPage,
                             }}
                             expandable={{
@@ -306,13 +291,13 @@ const CreateInvoice = () => {
                                         dataSource={record.units}
                                         renderItem={(item) => (
                                         <List.Item className="hover:bg-gray-100" onClick={() => handleAddProduct(item, record)}>
-                                            <div className="px-2 flex justify-between items-center w-full">
-                                                <div className="flex items-center gap-2">
+                                            <div className="px-2 flex justify-between items-center gap-2 w-full">
+                                                <div className="flex items-center warp gap-1">
                                                     <span className="text-base font-roboto">{item.name}</span>
-                                                        x
+                                                    x
                                                     <span className="text-sm font-roboto">{item.unit_name}</span>
                                                 </div>
-                                                <span className="text-base font-roboto">{formatCurrency(item.price)}</span>
+                                                <span className="text-base font-roboto text-red-400">{formatCurrency(item.price)}</span>
                                             </div>
                                         </List.Item>
                                         )}
@@ -352,14 +337,14 @@ const CreateInvoice = () => {
                                             <div className="flex-1">
                                                 <div className="flex items-center justify-between w-full">
                                                     <span className="font-roboto text-base line-clamp-1">{item.product_unit?.name}</span>
-                                                    <span className="font-roboto text-base text-red-500 line-clamp-1 group-hover:pr-[30px]! transition-all duration-100">{formatCurrency(item.total_price)}</span>
+                                                    <span className="font-roboto text-base text-red-500 line-clamp-1 group-hover:pr-7.5! transition-all duration-100">{formatCurrency(item.total_price)}</span>
                                                 </div>
                                                 <div className="flex justify-end gap-2 w-full">
                                                     <InputNumber
                                                         size="large"
                                                         min={0}
                                                         value={item.quantity}
-                                                        className="w-[100px]! font-roboto"
+                                                        className="w-50 font-roboto"
                                                         suffix={item.product_unit?.unit_name}
                                                         onChange={(e) => onChangeQuantity(item, e)}
                                                     />
@@ -369,7 +354,7 @@ const CreateInvoice = () => {
                                                         step={1000}
                                                         suffix="đ"
                                                         value={item.unit_price} 
-                                                        className="w-[120px]! font-roboto" 
+                                                        className="w-50 font-roboto" 
                                                         onChange={(e) => onChangeUnitPrice(item, e)}
                                                     />
                                                 </div>
@@ -408,7 +393,7 @@ const CreateInvoice = () => {
                                         onOpenChange={(visible) => setShowCustomer(visible)}
                                         arrow={false}
                                         content={
-                                            <div className="flex flex-col gap-2 w-[200px] max-h-[400px] overflow-auto">
+                                            <div className="flex flex-col gap-2 w-50 max-h-100 overflow-auto">
                                                 {customers.map((item) => (
                                                     <span 
                                                         key={item.id} 
@@ -417,7 +402,7 @@ const CreateInvoice = () => {
                                                             setShowCustomer(false)
                                                         }} 
                                                         className="cursor-pointer px-2 py-1 rounded-sm hover:bg-gray-100 font-roboto"
-                                                    >{item.name}</span>
+                                                    >{item.name} - {item.address}</span>
                                                 ))}
                                             </div>
                                         }

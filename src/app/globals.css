@@ -41,6 +41,7 @@ body {
   background-color: transparent !important;
 }
 
+.ant-popover-content,
 .ant-input-number-input,
 .ant-popover-title,
 .ant-statistic-title,

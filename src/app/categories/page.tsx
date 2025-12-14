@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Flex, Form, Input, InputNumber, Space, Table, Typography } from "antd";
+import { Button, Flex, Form, Input, InputNumber, Popconfirm, Space, Table, Typography } from "antd";
 import { DeleteOutlined, EditOutlined, LeftOutlined, PlusOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons";
 import type { TableProps, ColumnType } from "antd/es/table";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
@@ -29,7 +29,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
+  const inputNode = inputType === "number" ? <InputNumber /> : <Input className="w-full"/>;
 
   return (
     <td {...restProps}>
@@ -40,7 +40,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
           rules={[
             {
               required: true,
-              message: `Vui lòng nhập ${String(name).toLowerCase()}!`,
+              message: `Vui lòng nhập dữ liệu!`,
             },
           ]}
         >
@@ -124,9 +124,18 @@ const CategoryPage = () => {
       key: "name",
       title: "Tên danh mục",
       dataIndex: "name",
-      width: 200,
+      width: 250,
       render: (value: string) => (
         <span className="line-clamp-2">{value}</span>
+      ),
+    },
+    isCreating ? {} : {
+      key: "count",
+      title: "Số lượng sản phẩm",
+      dataIndex: "count",
+      width: 100,
+      render: (value: string, record: Category) => (
+        <span className="line-clamp-2">{record.products && record.products[0].count || 0}</span>
       ),
     },
     {
@@ -164,12 +173,22 @@ const CategoryPage = () => {
               />
             )}
             {isCreating && record.id === "new" ? null : (
-              <Button
-                icon={<DeleteOutlined className="text-red-500!" />}
-                className="border-red-500!"
-                loading={loadingAction}
-                onClick={() => onDelete(record)}
-              />
+              <Popconfirm
+              className="font-roboto"
+                title="Ban có chắc chắn muốn xóa?"
+                description="Hành động này không thể hoàn tác!"
+                okText="Đồng ý"
+                cancelText="Hủy"
+                onConfirm={() => onDelete(record)}
+                okButtonProps={{ loading: loadingAction }}
+              >
+                <Button
+                  icon={<DeleteOutlined className="text-red-500!" />}
+                  className="border-red-500!"
+                  loading={loadingAction}
+                  // onClick={() => onDelete(record)}
+                />
+              </Popconfirm>
             )}
           </Space>
         );
@@ -181,13 +200,18 @@ const CategoryPage = () => {
     if (!col?.dataIndex) return col;
     return {
       ...col,
-      onCell: (record: Category) => ({
-        record,
-        inputType: "text",
-        dataIndex: col.dataIndex as keyof Category,
-        name: col.name,
-        editing: isEditing(record),
-      }),
+      onCell: (record: Category) => {
+        if (col.dataIndex === "count") {
+          return col;
+        }
+        return({
+          record,
+          inputType: "text",
+          dataIndex: col.dataIndex as keyof Category,
+          name: col.name,
+          editing: isEditing(record),
+        })
+      },
     };
   });
 
@@ -313,7 +337,7 @@ const CategoryPage = () => {
                   return (
                     <Button
                       size="small"
-                      className="mr-1 ml-2 !rounded-sm"
+                      className="mr-1 ml-2"
                       icon={<LeftOutlined style={{ fontSize: "12px" }} />}
                     />
                   );
@@ -322,7 +346,7 @@ const CategoryPage = () => {
                   return (
                     <Button
                       size="small"
-                      className="ml-1 mr-2 !rounded-sm"
+                      className="ml-1 mr-2"
                       icon={<RightOutlined style={{ fontSize: "12px" }} />}
                     />
                   );

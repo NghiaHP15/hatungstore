@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '1000')
     const search = searchParams.get('search') || ''
 
-    let query = supabase.from('categories').select('*', { count: 'exact' })
+    let query = supabase.from('categories').select('*, products(count)', { count: 'exact' })
 
     if (search) {
       query = query.ilike('name_normalized', `%${search}%`)

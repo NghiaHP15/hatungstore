@@ -33,8 +33,13 @@ export interface Product {
 export interface Category {
   id?: string;
   name: string;
+  products?: Count[];
   created_at?: string;
   updated_at?: string;
+}
+
+export interface Count {
+  count: number;
 }
 
 export interface Customer {

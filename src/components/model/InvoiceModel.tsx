@@ -190,7 +190,7 @@ const InvoiceDetailForm = forwardRef(
     const handlePrint = useReactToPrint({
         contentRef:  invoiceRef, 
         pageStyle: `
-        @page { size: A5 portrait; margin: 10mm; padding: 5mm; }
+        @page { size: A5 portrait; margin: 5mm; padding: 3mm; }
         @media print {
             body { -webkit-print-color-adjust: exact; }
         }
@@ -322,7 +322,7 @@ const InvoiceDetailForm = forwardRef(
                   </div>
                   <div className='mt-4'>
                       <div className='flex justify-end items-center font-roboto'>
-                          <span className='font-medium w-[200px]'>Tổng tiền:</span>
+                          <span className='font-medium w-50'>Tổng tiền:</span>
                           <span className="font-medium text-base">{formatCurrency(param.total_amount || 0)}</span>
                       </div>
                   </div>
