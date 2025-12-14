@@ -235,11 +235,11 @@ const InvoiceDetailForm = forwardRef(
                         </div>
                         <div className=''>
                             <span>Tên: </span>
-                            <span className="font-medium">{store.owner}</span>
+                            <span className="font-medium">{store.account_bank}</span>
                         </div>
                         <div className=''>
                             <span>Số tài khoản: </span>
-                            <span className="font-medium">{store.account_bank}</span>
+                            <span className="font-medium">{store.number_bank}</span>
                         </div>
                     </div>
                     <div className="col-span-3 mt-2">
