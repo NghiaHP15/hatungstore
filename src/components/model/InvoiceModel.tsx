@@ -190,7 +190,7 @@ const InvoiceDetailForm = forwardRef(
     const handlePrint = useReactToPrint({
         contentRef:  invoiceRef, 
         pageStyle: `
-        @page { size: A5 portrait; margin: 5mm; padding: 3mm; }
+        @page { size: A5 portrait; margin: 5mm; padding: 8mm; }
         @media print {
             body { -webkit-print-color-adjust: exact; }
         }
@@ -228,13 +228,13 @@ const InvoiceDetailForm = forwardRef(
                         />
                     </div>
                     <div className="col-span-2 border-b border-gray-300">
-                        <h2 className="text-xl uppercase">Hóa đơn bán hàng</h2>
+                        <h2 className="text-lg uppercase">Hóa đơn bán hàng</h2>
                         <div className=''>
                             <span>Ngân hàng: </span>
                             <span className="font-medium">{store.name_bank}</span>
                         </div>
                         <div className=''>
-                            <span>Tên: </span>
+                            <span>Tên TK: </span>
                             <span className="font-medium">{store.account_bank}</span>
                         </div>
                         <div className=''>
@@ -279,7 +279,7 @@ const InvoiceDetailForm = forwardRef(
                               key: 'index',
                               title: '#',
                               render: (_: any, __: any, index: number) => <span>{index + 1}</span>,
-                              width: 50,
+                              width: 30,
                           },
                           {
                               title: "Sản phẩm",

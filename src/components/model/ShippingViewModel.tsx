@@ -66,8 +66,8 @@ const ShippingViewDetail = forwardRef(({ reload }: Props, ref) => {
             onCancel={closeModal}
             afterOpenChange={afterOpenChange}
             styles={{
-            body: { flexGrow: 1 },
-            content: { display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}}
+            body: { flexGrow: 1, overflowY: "scroll", height: "100vh" },
+            content: { display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100vh" }}}
             width="1000px"
             centered
             footer={[
@@ -229,10 +229,11 @@ const ShippingViewDetailForm = forwardRef(
                                 {item.customers.map((customer,index) => (
                                 <>
                                 <div key={customer.customer.id}>
-                                    <span className="text-sm font-roboto text-gray-400">{customer.customer.name}</span>
-                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity} {customer.product_unit}</span></span>
+                                    {/* <span className="text-sm font-roboto text-gray-400">{customer.customer.name}</span>
+                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity} {customer.product_unit}</span></span> */}
+                                    <span className="text-sm font-roboto text-gray-400">{customer.quantity} {customer.product_unit}</span>
                                 </div>
-                                <span className="text-sm font-roboto text-gray-400">{item.customers.length - 1 === index ? "" : " - "}</span>
+                                <span className="text-sm font-roboto text-gray-400">{item.customers.length - 1 === index ? "" : "-"}</span>
                                 </>
                                 ))}
                             </div>
@@ -253,17 +254,18 @@ const ShippingViewDetailForm = forwardRef(
                         renderItem={(item) => (
                         <List.Item className="flex flex-col">
                             <div className="flex justify-between items-center w-full text-base font-roboto border-gray-200">
-                                <span>{item.product_unit.name}</span>
-                                <span className="text-sm font-roboto text-gray-400">Số lượng x <span className="text-base text-gray-800">{item.totalQuantity}</span></span>
+                                <span className="">{item.product_unit.name}</span>
+                                <span className="text-sm font-roboto w-20 text-gray-400">Số lượng x <span className="text-base text-gray-800">{item.totalQuantity}</span></span>
                             </div>
                             <div className="flex gap-2 flex-wrap items-center justify-start w-full">
                                 {item.customers.map((customer,index) => (
                                 <>
                                 <div key={customer.customer.id}>
-                                    <span className="text-sm font-roboto text-gray-400">{customer.customer.name}</span>
-                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity} {customer.product_unit}</span></span>
+                                    {/* <span className="text-sm font-roboto text-gray-400">{customer.customer.name}</span>
+                                    <span className="text-sm font-roboto text-gray-400">: <span className="text-gray-400">{customer.quantity} {customer.product_unit}</span></span> */}
+                                    <span className="text-sm font-roboto text-gray-400">{customer.quantity} {customer.product_unit}</span>
                                 </div>
-                                <span className="text-sm font-roboto text-gray-400">{item.customers.length - 1 === index ? "" : " - "}</span>
+                                <span className="text-sm font-roboto text-gray-400">{item.customers.length - 1 === index ? "" : "-"}</span>
                                 </>
                                 ))}
                             </div>
