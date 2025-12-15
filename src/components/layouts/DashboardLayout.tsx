@@ -66,7 +66,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const fetchProducts = async () => {
       try {
         setLoadSearch(true);
-        const res = await productunitsAPI.getProductUnits({ limit: 10, search: deboundedSearch });
+        const res = await productunitsAPI.getProductUnits({ limit: 30, search: deboundedSearch });
         if (res.data.product_units) {
           setProducts(res.data.product_units);
         }
@@ -173,7 +173,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const renderSearch = () => {
     return (
-      <div className='w-[500px] h-max overflow-auto'>
+      <div className='w-125 h-[calc(100vh-130px)] overflow-auto'>
         <List
         loading={loadSearch}
           itemLayout="horizontal"
@@ -255,7 +255,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <Layout>
         <Header
           style={{ background: colorBgContainer }}
-          className="flex items-center justify-end gap-4 px-6! h-[55px]!"
+          className="flex items-center justify-end gap-4 px-6! h-13.75!"
         >
           <Popover 
             trigger={"click"}
