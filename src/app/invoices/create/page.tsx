@@ -295,7 +295,7 @@ const CreateInvoice = () => {
                                                 <div className="flex items-center warp gap-1">
                                                     <span className="text-base font-roboto">{item.name}</span>
                                                     x
-                                                    <span className="text-sm font-roboto">{item.unit_name}</span>
+                                                    <span className="text-sm font-roboto text-green-700">{item.unit_name}</span>
                                                 </div>
                                                 <span className="text-base font-roboto text-red-400">{formatCurrency(item.price)}</span>
                                             </div>

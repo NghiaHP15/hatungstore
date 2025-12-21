@@ -347,7 +347,7 @@ const [products, setProducts] = useState<Product[]>([]);
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-base font-roboto">{item.name}</span>
                                                         x
-                                                    <span className="text-sm font-roboto">{item.unit_name}</span>
+                                                    <span className="text-sm font-roboto text-green-700">{item.unit_name}</span>
                                                 </div>
                                                 <span className="text-base font-roboto">{formatCurrency(item.price)}</span>
                                             </div>

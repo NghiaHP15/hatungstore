@@ -245,15 +245,15 @@ const InvoiceDetailForm = forwardRef(
                     <div className="col-span-3 mt-2">
                         <div className=''>
                             <span>Tên khách hàng: </span>
-                            <span>{param.customer?.name}</span>
+                            <span className="font-medium">{param.customer?.name}</span>
                         </div>
                         <div className=''>
                             <span>Số điện thoại: </span>
-                            <span>{param.customer?.phone}</span>
+                            <span className="font-medium">{param.customer?.phone}</span>
                         </div>
                         <div className=''>
                             <span>Địa chỉ: </span>
-                            <span>{param.customer?.address}</span>
+                            <span className="font-medium">{param.customer?.address}</span>
                         </div>
                     </div>
                     <div className="col-span-3 mt-2">
@@ -292,7 +292,7 @@ const InvoiceDetailForm = forwardRef(
                               dataIndex: 'count',
                               key: 'count',
                               align: 'center',
-                              render: (_, record) => <span>{record.quantity}</span>,
+                              render: (_, record) => <span className="font-medium">{record.quantity}</span>,
                           },
                           {
                               title: "DVT",
