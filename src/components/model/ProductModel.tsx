@@ -8,7 +8,7 @@ import { categoriesAPI, productsAPI, uploadAPI } from "@/lib/api";
 import { Button, Col, Form, Input, InputNumber, Modal, Popover, Row, Select, Space, Table } from "antd";
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { UploadImage } from "../upload/upload-image";
-import { publicId } from "../upload/utils";
+// import { publicId } from "../upload/utils";
 import { v4 as uuid } from "uuid";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -444,11 +444,11 @@ const ProductDetailForm = forwardRef(
                         setLoadImage(true);
                         const formData = new FormData();
                         formData.append('image', file as Blob);
-                        if(param.image_url) {
-                        const id = publicId(param.image_url);
-                        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                        id && await uploadAPI.deleteImage(id);
-                        }
+                        // if(param.image_url) {
+                        // const id = publicId(param.image_url);
+                        // // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                        // id && await uploadAPI.deleteImage(id);
+                        // }
                         const res = await uploadAPI.uploadImage(formData);
                         if(res){
                         onChange(res.data.url, "image_url");

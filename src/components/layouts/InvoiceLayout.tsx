@@ -486,17 +486,6 @@ const [products, setProducts] = useState<Product[]>([]);
                                         onChange={(e) => setInvoice({...invoice, customer_address: e.target.value})}
                                     />
                                 </Col>
-                                <Col span={24} className="flex! items-center justify-between mt-4 ">
-                                    <span className="font-roboto">Giảm giá: </span>
-                                    <InputNumber
-                                        size="large"
-                                        min={0}
-                                        step={1000}
-                                        value={invoice?.discount_amount}
-                                        suffix="đ"
-                                        onChange={(e) => setInvoice({...invoice, discount_amount: e || 0})}
-                                    />
-                                </Col>
                             </Row>
                         </div>
                         <div className="px-4 py-2 font-roboto">

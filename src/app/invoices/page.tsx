@@ -56,7 +56,7 @@ const CategoryPage = () => {
             key: 'index',
             title: '#',
             render: (_: any, __: any, index: number) => <span>{index + 1}</span>,
-            width: 50,
+            width: 40,
         },
         {
             key: 'code',
@@ -69,14 +69,21 @@ const CategoryPage = () => {
             key: 'customer_name',
             dataIndex: 'customer_name',
             title: "Khách hàng",
-            width: 150,
+            width: 130,
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{record.customer?.name}</span>
+        },
+        {
+            key: 'customer_address',
+            dataIndex: 'customer_address',
+            title: "Địa chỉ",
+            width: 150,
+            render: (_: any, record: Invoice) => <span className="line-clamp-2">{record.customer?.address}</span>
         },
         {
             key: 'amount',
             dataIndex: 'amount',
             title: "Số lượng",
-            width: 100,
+            width: 70,
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{record.items?.reduce((total, item) => total + item.quantity, 0)}</span>
         },
         {
@@ -90,14 +97,14 @@ const CategoryPage = () => {
             key: 'status',
             dataIndex: 'status',
             title: "Trạng thái",
-            width: 100,
+            width: 80,
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{record.status ? <Tag className="font-roboto" color="green">Đã giao</Tag> : <Tag className="font-roboto" color="red">Chưa giao</Tag>}</span>
         },
         {
             key: 'created_at',
             dataIndex: 'created_at',
             title: "Ngày tạo",
-            width: 100,
+            width: 80,
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{dayjs(record.created_at).format('DD/MM/YYYY')}</span>
         },
         {
