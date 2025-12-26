@@ -115,6 +115,7 @@ export type Database = {
           discount_amount: number | null
           id: string
           invoice_code: string
+          payment_method: boolean | null
           status: boolean
           total_amount: number
         }
@@ -125,6 +126,7 @@ export type Database = {
           discount_amount?: number | null
           id?: string
           invoice_code: string
+          payment_method?: boolean | null
           status?: boolean
           total_amount: number
         }
@@ -135,6 +137,7 @@ export type Database = {
           discount_amount?: number | null
           id?: string
           invoice_code?: string
+          payment_method?: boolean | null
           status?: boolean
           total_amount?: number
         }
@@ -371,7 +374,52 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      invoice_daily: {
+        Row: {
+          cash_revenue: number | null
+          date: string | null
+          total_orders: number | null
+          total_revenue: number | null
+          transfer_revenue: number | null
+        }
+        Relationships: []
+      }
+      invoice_items_report: {
+        Row: {
+          customer_id: string | null
+          date: string | null
+          invoice_id: string | null
+          invoice_item_id: string | null
+          product_name: string | null
+          product_name_normalized: string | null
+          product_unit_id: string | null
+          quantity: number | null
+          total_price: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_items_product_unit_id_fkey"
+            columns: ["product_unit_id"]
+            isOneToOne: false
+            referencedRelation: "product_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

@@ -8,7 +8,7 @@ import { no_image } from "@/images";
 import { categoriesAPI, customersAPI, invoicesAPI, productsAPI } from "@/lib/api";
 import { formatCurrency, toLowerCaseNonAccent } from "@/lib/utils";
 import { CloseOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Col, Image, Input, InputNumber, List, message, Popover, Row, Select, Space, Table, Typography } from "antd";
+import { Button, Checkbox, Col, Image, Input, InputNumber, List, message, Popover, Row, Select, Space, Table, Typography } from "antd";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ const emptyParameter: Invoice = {
     customer_address: "",
     discount_amount: 0,
     status: false,
+    payment_method: false,
     items: [],
 }
 
@@ -52,6 +53,7 @@ const [products, setProducts] = useState<Product[]>([]);
                 _params.customer_address = res.data?.customer?.address;
                 _params.discount_amount = res.data?.discount_amount;
                 _params.status = res.data?.status;
+                _params.payment_method = res.data?.payment_method;
                 const items = res.data?.items.map((item: any) => ({ ...item, product_unit: {...item.product_unit, image_url: item.product_unit?.product?.image_url} })) || [];
                 _listOrder.push(...items);
                 setListOrder(_listOrder);
@@ -485,6 +487,9 @@ const [products, setProducts] = useState<Product[]>([]);
                                         value={invoice?.customer_address}
                                         onChange={(e) => setInvoice({...invoice, customer_address: e.target.value})}
                                     />
+                                </Col>
+                                <Col span={24} className="flex! flex-col gap-1 mt-2">
+                                    <Checkbox className="font-roboto" checked={invoice?.payment_method} onChange={(e) => setInvoice({...invoice, payment_method: e.target.checked})}>Chuyển khoản</Checkbox>
                                 </Col>
                             </Row>
                         </div>

@@ -28,6 +28,7 @@ import {
   TruckOutlined,
   TeamOutlined,
   PlusOutlined,
+  ProfileOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -89,7 +90,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     {
       key: '/products',
       icon: <ShoppingOutlined className='text-lg!' />,
-      label: "Sản phẩm",
+      label: <span className='text-base font-roboto'>Sản phẩm</span>,
       children: [
         {
           key: '/products/units',
@@ -115,6 +116,21 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       key: '/transports',
       icon: <TruckOutlined className='text-lg!' />,
       label: <Link href="/transports" className='text-base font-roboto'>Sổ tổng hợp</Link>,
+    },
+    {
+      key: '/report',
+      icon: <ProfileOutlined className='text-lg!' />,
+      label: <span className='text-base font-roboto'>Báo cáo</span>,
+      children: [
+        {
+          key: '/report/revenue-reports',
+          label: <Link href="/report/revenue-reports" className='text-base font-roboto'>Báo cáo doanh thu</Link>,
+        },
+        {
+          key: '/report/product-reports',
+          label: <Link href="/report/product-reports" className='text-base font-roboto'>Báo cáo sản phẩm</Link>,
+        },
+      ]
     },
     {
       key: '/customers',

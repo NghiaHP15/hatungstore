@@ -265,6 +265,10 @@ const InvoiceDetailForm = forwardRef(
                             <span>Ngày tạo đơn: </span>
                             <span>{dayjs(param.created_at).tz("Asia/Ho_Chi_Minh").format("DD/MM/YYYY")}</span>
                         </div>
+                        <div className=''>
+                            <span>Phương thức: </span>
+                            <span>{param.payment_method ? "Chuyển khoản": "Tiền mặt"}</span>
+                        </div>
                     </div>
               </div>
               <div>

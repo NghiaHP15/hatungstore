@@ -94,6 +94,13 @@ const CategoryPage = () => {
             render: (_: any, record: Invoice) => <span className="line-clamp-2">{formatCurrency(record.total_amount || 0)}</span>
         },
         {
+            key: "payment_method",
+            dataIndex: "payment_method",
+            title: "Phương thức",
+            width: 100,
+            render: (_: any, record: Invoice) => <span className="line-clamp-2">{record.payment_method ? "chuyển khoản" : "tiền mặt"}</span>
+        },
+        {
             key: 'status',
             dataIndex: 'status',
             title: "Trạng thái",

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "supabase": "supabase gen types typescript --project-id cbpxhnvxojwoqhmwugva --schema public > src/app/types/supabase.ts",
     "start": "next start",
     "lint": "eslint"
   },
@@ -24,13 +25,15 @@
     "html2canvas": "^1.4.1",
     "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
-    "jspdf": "^3.0.3",
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2",
     "lodash": "^4.17.21",
-    "next": "^16.0.10",
+    "next": "^15.5.9",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-infinite-scroll-component": "^6.1.0",
     "react-to-print": "^3.1.1",
+    "xlsx": "^0.18.5",
     "zlib": "^1.0.5",
     "zustand": "^5.0.8"
   },

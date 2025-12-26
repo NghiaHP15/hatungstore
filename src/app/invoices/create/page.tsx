@@ -8,7 +8,7 @@ import { no_image } from "@/images";
 import { categoriesAPI, customersAPI, invoicesAPI, productsAPI } from "@/lib/api";
 import { formatCurrency, toLowerCaseNonAccent } from "@/lib/utils";
 import { CloseOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Col, Image, Input, InputNumber, List, message, Popover, Row, Select, Space, Table, Typography } from "antd";
+import { Button, Checkbox, Col, Image, Input, InputNumber, List, message, Popover, Row, Select, Space, Table, Typography } from "antd";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
@@ -20,6 +20,7 @@ const emptyParameter: Invoice = {
     customer_address: "",
     discount_amount: 0,
     status: false,
+    payment_method: false,
     items: [],
 }
 
@@ -434,9 +435,12 @@ const CreateInvoice = () => {
                                         onChange={(e) => setInvoice({...invoice, customer_address: e.target.value})}
                                     />
                                 </Col>
+                                <Col span={24} className="flex! flex-col gap-1 mt-2">
+                                    <Checkbox className="font-roboto" checked={invoice?.payment_method} onChange={(e) => setInvoice({...invoice, payment_method: e.target.checked})}>Chuyển khoản</Checkbox>
+                                </Col>
                             </Row>
                         </div>
-                        <div className="px-4 py-2 font-roboto">
+                        <div className="px-4 py-1 font-roboto">
                             <div className="flex items-center justify-between">
                                 <span>Tổng loại sản phẩm: </span>
                                 <span>{listOrder.length}</span>

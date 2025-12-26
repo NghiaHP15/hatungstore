@@ -60,6 +60,7 @@ export interface Invoice {
   amount?: number;
   cashier_id?: string;
   status: boolean;
+  payment_method?: boolean;
   discount_amount?: number;
   total_amount?: number;
   created_at?: string;
@@ -104,6 +105,24 @@ export interface ShippingItem {
   invoice_id?: string
   invoice: Invoice | null,
   prioritized?: boolean
+}
+
+export interface ReportRevenue {
+  date: string;
+  total_orders: number;
+  transfer_revenue: number;
+  cash_revenue: number;
+  total_revenue: number;
+}
+
+export interface ReportProduct {
+  product_id: string;
+  product_name: number;
+  product_name_normalized: string;
+  total_quantity_sold: number;
+  total_orders: number;
+  total_customers: number;
+  total_revenue: number;
 }
 
 export interface UserPermissions {

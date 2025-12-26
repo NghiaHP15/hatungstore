@@ -44,6 +44,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<Pa
       customer_address,
       items,
       status,
+      payment_method,
       discount_amount = 0,
     } = body;
 
@@ -102,6 +103,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<Pa
         cashier_id: user.id,
         discount_amount,
         status,
+        payment_method,
         customer_id,
       })
       .eq("id", id)

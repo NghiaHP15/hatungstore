@@ -56,6 +56,8 @@ export const storeAPI = {
 
 export const reportAPI = {
   getGeneral: () => api.get(`/report/general`),
+  getRevenue: (params: any) => api.get(`/report/revenue`, { params }),
+  getProduct: (params: any) => api.get(`/report/product`, { params }),
 };
 
 export const productunitsAPI = {
